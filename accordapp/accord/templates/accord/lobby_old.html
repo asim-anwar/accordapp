@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .lobby-container{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+</style>
+
+<div class="lobby-container">
+    <div >
+
+        <h1>{{lobby.name}}</h1>
+        <h3>{{lobby.description}}</h3>
+        <hr>
+
+        <div class="post-wrapper">
+            <h3>Posts</h3>
+            {% for post in posts %}
+                <small>@{{post.user}}   {{post.created|timesince}} ago</small>
+                <p>{{post.post}}</p>
+                {% if request.user == post.user or request.user == lobby.host%}
+                    <a href="{% url 'delete-post' post.id %}">Delete</a>
+                {% endif %}
+            <hr>
+
+            {% endfor %}
+
+            {%if request.user.is_authenticated%}
+            <div class="post-form">
+                <form method="POST" action="">
+                    {%csrf_token%}
+                    <input type="text" name="post" placeholder="Post here...">
+                </form>
+            </div>
+            {%endif%}
+        </div>
+    </div>
+
+    <div>
+        <h3>Participants</h3>
+        <hr>
+        {% for user in participants%}
+            <div>
+                {% if user.id == lobby.host_id %}
+                    <p>@{{lobby.host}}(lobby admin)</p>
+                {% else %}
+                    <p>@{{user.username}}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+{% endblock %}
