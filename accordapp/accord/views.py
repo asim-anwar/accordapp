@@ -85,8 +85,9 @@ def home(request):
     lobby_count = lobbys.count
     posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
     orders = Order.objects.all()
+    pages = Pages.objects.all()
 
-    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders}
+    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders, 'pages':pages}
     return render(request, 'accord/home.html', context)
 
 

@@ -5,7 +5,7 @@
   --color-main-light: #e1f6fb;
   --color-dark: #ed6a4c;
   --color-dark-medium: #ffcfa5;
-  --color-dark-light: #ffcfa5;
+  --color-dark-light: #fc4b0b;
   --color-light: black;
   --color-gray: #8b8b8b;
   --color-light-gray: #b2bdbd;
@@ -64,8 +64,8 @@ a {
 
 /*========== components ==========*/
 .container {
-  max-width: 120rem;
-  width: 90%;
+  max-width: 160rem;
+  width: 100%;
   margin: auto;
 }
 
@@ -583,7 +583,7 @@ a {
 
 .topics__list li a.active,
 .topics__list li a:hover {
-  color: var(--color-main);
+  color: var(--color-dark-light);
 }
 
 .topics__list li a span {
@@ -593,6 +593,7 @@ a {
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 1px;
+  color: var(--color-main-light);
 }
 
 .topics-page a:hover {
