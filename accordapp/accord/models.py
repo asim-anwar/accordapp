@@ -49,3 +49,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.post[0:10]
+
+
+class Product(models.Model):
+    product_name = models.CharField(max_length=200, null=True, blank=True)
+    product_details = models.TextField(null=True, blank=True)
+    product_id = models.CharField(max_length=200, null=True, blank=True)
+
+
+class Order(models.Model):
+    order_id = models.CharField(max_length=200, null=True, blank=True)
+    # product_name = models.CharField(max_length=200, null=True, blank=True)
+    # product_details = models.TextField(null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)

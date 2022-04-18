@@ -698,7 +698,7 @@ a {
 }
 
 .roomListRoom__meta {
-  border-top: 1px solid var(--color-dark-medium);
+  border-bottom: 1px solid var(--color-dark-medium);
   padding-top: 1rem;
   display: flex;
   align-items: center;
