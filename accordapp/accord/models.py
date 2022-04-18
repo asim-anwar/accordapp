@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 # Create your models here.
 
 class User(AbstractUser):
@@ -13,12 +14,12 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+
 class Topic(models.Model):
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
-
 
 
 class Lobby(models.Model):
@@ -38,7 +39,7 @@ class Lobby(models.Model):
 
 
 class Post(models.Model):
-    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
     post = models.TextField()
     updated = models.DateTimeField(auto_now=True)
@@ -51,10 +52,20 @@ class Post(models.Model):
         return self.post[0:10]
 
 
+class Pages(models.Model):
+    page_name = models.CharField(max_length=100, null=True, blank=True)
+
+
 class Product(models.Model):
     product_name = models.CharField(max_length=200, null=True, blank=True)
     product_details = models.TextField(null=True, blank=True)
+    price = models.IntegerField(null=True, blank=True)
+    preorder = models.IntegerField(null=True, blank=True)
     product_id = models.CharField(max_length=200, null=True, blank=True)
+    product_type = models.CharField(max_length=200, null=True, blank=True)
+    available = models.CharField(max_length=200, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_date = models.DateTimeField(null=True, blank=True)
 
 
 class Order(models.Model):
@@ -62,7 +73,13 @@ class Order(models.Model):
     # product_name = models.CharField(max_length=200, null=True, blank=True)
     # product_details = models.TextField(null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    customer_name = models.CharField(max_length=200, null=True, blank=True)
+    customer_contactnumber = models.CharField(max_length=200, null=True, blank=True)
+    customer_address = models.TextField(null=True, blank=True)
+    quantity = models.IntegerField(null=True, blank=True)
+    total_price = models.IntegerField(null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_date = models.DateTimeField(null=True, blank=True)
 
-
-class Pages(models.Model):
-    page_name = models.CharField(max_length=100, null=True, blank=True)
+    def __str__(self):
+        return self.product

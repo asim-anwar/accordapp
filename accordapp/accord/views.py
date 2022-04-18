@@ -1,3 +1,6 @@
+import datetime
+import random
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -85,10 +88,31 @@ def home(request):
     lobby_count = lobbys.count
     posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
     orders = Order.objects.all()
+    products = Product.objects.all()
     pages = Pages.objects.all()
 
-    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders, 'pages':pages}
+    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders, 'pages':pages, 'products':products}
     return render(request, 'accord/home.html', context)
+
+
+def products(request):
+    page = 'products'
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+
+    lobbys = Lobby.objects.filter(
+        Q(topic__name__icontains=q) |
+        Q(name__icontains=q) |
+        Q(description__contains=q)
+    )
+    topics = Topic.objects.all()[0:6]
+    lobby_count = lobbys.count
+    posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
+    orders = Order.objects.all()
+    products = Product.objects.all()
+    pages = Pages.objects.all()
+
+    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders, 'pages':pages, 'products':products}
+    return render(request, 'accord/products.html', context)
 
 
 def lobby(request, pk):
@@ -121,7 +145,7 @@ def user_profile(request, pk):
     return render(request, 'accord/user_profile.html', context)
 
 
-def order_list(request, pk):
+def order_list(request):
     page = 'order-list'
     # user = User.objects.get(id=pk)
     orders = Order.objects.all()
@@ -150,12 +174,88 @@ def create_lobby(request):
             host=request.user,
             topic=topic,
             name=request.POST.get('name'),
+            email=request.POST.get('email'),
             description=request.POST.get('description')
         )
         return redirect('home')
 
     context = {'page': page, 'form': form, 'topics': topics}
     return render(request, 'accord/create_update_lobby.html', context)
+
+
+@login_required(login_url='login')
+def create_order(request):
+    page = 'create-order'
+    form = OrderForm()
+    error = ''
+    # topics = Topic.objects.all()
+
+    if request.method == 'POST':
+        Price = Product.objects.get(id=request.POST.get('product')).price
+        quantity = request.POST.get('quantity')
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.created_by = request.user
+            order.created_date = datetime.datetime.now()
+            order.order_id = 'OD'+str(random.randint(100000, 999999))
+            order.total_price = int(Price)*int(quantity)
+            order.save()
+        else:
+            error = form.errors
+
+        # Order.objects.create(
+        #     customer_name=request.POST.get('customer_name'),
+        #     customer_contactnumber=request.POST.get('customer_contactnumber'),
+        #     customer_address=request.POST.get('customer_address'),
+        #     product_id=request.POST.get('product'),
+        #     order_id='OD'+str(random.randint(100000, 999999)),
+        #     quantity=request.POST.get('quantity'),
+        #     total_price=int(Price)*int(quantity)
+        # )
+        return redirect('home')
+
+    context = {'page': page, 'form': form, 'error': error}
+    return render(request, 'accord/create_update_order.html', context)
+
+
+@login_required(login_url='login')
+def create_product(request):
+    page = 'create-product'
+    form = ProductForm()
+    error = ''
+    # topics = Topic.objects.all()
+
+    if request.method == 'POST':
+        # Price = Product.objects.get(id=request.POST.get('product')).price
+        # quantity = request.POST.get('quantity')
+        form = ProductForm(request.POST)
+        ptype = request.POST.get('product_type')
+        pshort = 'FG' if ptype == 'Figurines' else 'KCN' if ptype == 'Keychains' else 'KC' if ptype == 'Keycaps' else 'SW' if ptype == 'Swords' else 'HP' if ptype == 'Headphone Pouch' else 'MP' if ptype == 'Mousepads' else 'JS' if ptype == 'Clothing' else 'HL' if ptype == 'Heirloom' else ''
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.created_by = request.user
+            product.created_date = datetime.datetime.now()
+            product.product_type = ptype
+            product.preorder = int(request.POST.get('price'))*(30/100)
+            product.product_id = pshort+str(random.randint(100000, 999999))
+            product.save()
+        else:
+            error = form.errors
+
+        # Order.objects.create(
+        #     customer_name=request.POST.get('customer_name'),
+        #     customer_contactnumber=request.POST.get('customer_contactnumber'),
+        #     customer_address=request.POST.get('customer_address'),
+        #     product_id=request.POST.get('product'),
+        #     order_id='OD'+str(random.randint(100000, 999999)),
+        #     quantity=request.POST.get('quantity'),
+        #     total_price=int(Price)*int(quantity)
+        # )
+        return redirect('products')
+
+    context = {'page': page, 'form': form, 'error': error}
+    return render(request, 'accord/create_update_product.html', context)
 
 
 @login_required(login_url='login')

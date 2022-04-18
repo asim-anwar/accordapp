@@ -7,6 +7,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
 
     path('', views.home, name='home'),
+    path('products/', views.products, name='products'),
     path('lobby/<str:pk>/', views.lobby, name='lobby'),
     path('user_profile/<str:pk>', views.user_profile, name='user-profile'),
     path('order_list', views.order_list, name='order-list'),
@@ -15,6 +16,8 @@ urlpatterns = [
     path('topics/', views.topics, name='topics'),
     path('activity/', views.activity, name='activity'),
     path('create_lobby/', views.create_lobby, name='create-lobby'),
+    path('create_order/', views.create_order, name='create-order'),
+    path('create_product/', views.create_product, name='create-product'),
     path('update_lobby/<str:pk>/', views.update_lobby, name='update-lobby'),
     path('delete_lobby/<str:pk>/', views.deleteLobby, name='delete-lobby'),
     path('delete_post/<str:pk>/', views.deletePost, name='delete-post')

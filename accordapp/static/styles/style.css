@@ -8,7 +8,7 @@
   --color-dark-light: #fc4b0b;
   --color-light: black;
   --color-gray: #8b8b8b;
-  --color-light-gray: #b2bdbd;
+  --color-light-gray: #565656;
   --color-bg: #fff3e8;
   --color-success: #5dd693;
   --color-error: #fc4b0b;
@@ -415,11 +415,11 @@ a {
 }
 
 .layout--2 > .container > div:first-child {
-  flex-basis: 15%;
+  flex-basis: 10%;
 }
 
 .layout--2 > .container > div:last-child {
-  flex-basis: 80%;
+  flex-basis: 85%;
 }
 /*========== Layout Box ==========*/
 
@@ -494,12 +494,13 @@ a {
   display: block;
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: var(--color-light);
 }
 
 .form__group input,
 .form__group textarea,
 .form__group select {
-  background: transparent;
+  background: #eabaaf;
   border: 1px solid var(--color-dark-light);
   padding: 1rem;
   border-radius: 3px;
@@ -515,7 +516,8 @@ a {
 }
 
 .form__group textarea {
-  background: transparent;
+  /*background: transparent;*/
+  background: #eabaaf;
   height: 10rem;
   resize: none;
 }
