@@ -75,44 +75,57 @@ def signup(request):
     return render(request, 'accord/login_register.html', context)
 
 
+@login_required(login_url='login')
 def home(request):
     page = 'home'
-    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    # q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    lobbys = Lobby.objects.filter(
-        Q(topic__name__icontains=q) |
-        Q(name__icontains=q) |
-        Q(description__contains=q)
-    )
-    topics = Topic.objects.all()[0:6]
-    lobby_count = lobbys.count
-    posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
     orders = Order.objects.all()
     products = Product.objects.all()
     pages = Pages.objects.all()
+    tasks = Tasks.objects.filter(assigned_to=request.user)
 
-    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders, 'pages':pages, 'products':products}
+    context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
     return render(request, 'accord/home.html', context)
 
 
+@login_required(login_url='login')
 def products(request):
     page = 'products'
-    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    # q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    lobbys = Lobby.objects.filter(
-        Q(topic__name__icontains=q) |
-        Q(name__icontains=q) |
-        Q(description__contains=q)
-    )
-    topics = Topic.objects.all()[0:6]
-    lobby_count = lobbys.count
-    posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
     orders = Order.objects.all()
     products = Product.objects.all()
     pages = Pages.objects.all()
+    tasks = Tasks.objects.filter(assigned_to=request.user)
 
-    context = {'page': page, 'lobbys': lobbys, 'topics': topics, 'lobby_count': lobby_count, 'posts': posts, 'orders':orders, 'pages':pages, 'products':products}
+    context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
     return render(request, 'accord/products.html', context)
+
+
+@login_required(login_url='login')
+def tasks(request):
+    page = 'tasks'
+    # q = request.GET.get('q') if request.GET.get('q') != None else ''
+
+    # lobbys = Lobby.objects.filter(
+    #     Q(topic__name__icontains=q) |
+    #     Q(name__icontains=q) |
+    #     Q(description__contains=q)
+    # )
+    # topics = Topic.objects.all()[0:6]
+    # lobby_count = lobbys.count
+    # posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
+    orders = Order.objects.all()
+    products = Product.objects.all()
+    pages = Pages.objects.all()
+    if request.user.id == 1:
+        tasks = Tasks.objects.all()
+    else:
+        tasks = Tasks.objects.filter(assigned_to=request.user)
+
+    context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
+    return render(request, 'accord/tasks.html', context)
 
 
 def lobby(request, pk):
@@ -188,18 +201,21 @@ def create_order(request):
     page = 'create-order'
     form = OrderForm()
     error = ''
+    product_id = Product.objects.all()
     # topics = Topic.objects.all()
 
     if request.method == 'POST':
         Price = Product.objects.get(id=request.POST.get('product')).price
+        product_id = Product.objects.get(id=request.POST.get('product')).id
         quantity = request.POST.get('quantity')
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.created_by = request.user
             order.created_date = datetime.datetime.now()
-            order.order_id = 'OD'+str(random.randint(100000, 999999))
-            order.total_price = int(Price)*int(quantity)
+            order.order_id = 'OD' + str(random.randint(100000, 999999))
+            order.total_price = int(Price) * int(quantity)
+            order.product_id = product_id
             order.save()
         else:
             error = form.errors
@@ -215,7 +231,7 @@ def create_order(request):
         # )
         return redirect('home')
 
-    context = {'page': page, 'form': form, 'error': error}
+    context = {'page': page, 'form': form, 'error': error, 'product_id': product_id}
     return render(request, 'accord/create_update_order.html', context)
 
 
@@ -231,14 +247,15 @@ def create_product(request):
         # quantity = request.POST.get('quantity')
         form = ProductForm(request.POST)
         ptype = request.POST.get('product_type')
+        print(ptype)
         pshort = 'FG' if ptype == 'Figurines' else 'KCN' if ptype == 'Keychains' else 'KC' if ptype == 'Keycaps' else 'SW' if ptype == 'Swords' else 'HP' if ptype == 'Headphone Pouch' else 'MP' if ptype == 'Mousepads' else 'JS' if ptype == 'Clothing' else 'HL' if ptype == 'Heirloom' else ''
         if form.is_valid():
             product = form.save(commit=False)
             product.created_by = request.user
             product.created_date = datetime.datetime.now()
             product.product_type = ptype
-            product.preorder = int(request.POST.get('price'))*(30/100)
-            product.product_id = pshort+str(random.randint(100000, 999999))
+            product.preorder = int(request.POST.get('price')) * (30 / 100)
+            product.product_id = pshort + str(random.randint(100000, 999999))
             product.save()
         else:
             error = form.errors
@@ -256,6 +273,47 @@ def create_product(request):
 
     context = {'page': page, 'form': form, 'error': error}
     return render(request, 'accord/create_update_product.html', context)
+
+
+@login_required(login_url='login')
+def create_task(request):
+    page = 'create-task'
+    form = TaskForm()
+    error = ''
+    users = User.objects.all()
+
+    if request.method == 'POST':
+        # Price = Product.objects.get(id=request.POST.get('product')).price
+        # quantity = request.POST.get('quantity')
+        form = TaskForm(request.POST)
+        # print(request.POST.get('assigned_to'))
+
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.created_by = request.user
+            task.created_date = datetime.datetime.now()
+            task.assign_date = datetime.datetime.now()
+            task.assigned_to = User.objects.get(username=request.POST.get('assigned_to'))
+            # task.preorder = int(request.POST.get('price')) * (30 / 100)
+            task.task_id = 'TSK' + str(random.randint(10000, 99999))
+            task.save()
+        else:
+            error = form.errors
+            print(error)
+
+        # Order.objects.create(
+        #     customer_name=request.POST.get('customer_name'),
+        #     customer_contactnumber=request.POST.get('customer_contactnumber'),
+        #     customer_address=request.POST.get('customer_address'),
+        #     product_id=request.POST.get('product'),
+        #     order_id='OD'+str(random.randint(100000, 999999)),
+        #     quantity=request.POST.get('quantity'),
+        #     total_price=int(Price)*int(quantity)
+        # )
+        return redirect('tasks')
+
+    context = {'page': page, 'form': form, 'error': error, 'users': users}
+    return render(request, 'accord/create_update_task.html', context)
 
 
 @login_required(login_url='login')

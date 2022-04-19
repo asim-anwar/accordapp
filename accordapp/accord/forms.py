@@ -1,4 +1,7 @@
-from django.forms import ModelForm
+from django import forms
+from django.forms import ModelForm, TextInput, Select
+from django_select2.forms import ModelSelect2Widget
+
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
 
@@ -22,29 +25,37 @@ class UserForm(ModelForm):
         fields = ['avatar', 'username', 'email', 'name', 'bio']
 
 
-class OrderForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(OrderForm, self).__init__(*args, **kwargs)
-
-        try:
-            # client_id = UserExtend.objects.values_list('client_id', flat=True).get(user=user)
-            self.fields['product'].label_from_instance = self.product_label
-
-        except :
-            ### there is not userextend corresponding to this user, do what you want
-            print('Hoenai')
-            pass
+class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['product', 'customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
 
-    @staticmethod
-    def product_label(self):
-        return str(self.product_id)
-
 
 class ProductForm(ModelForm):
+    product_name = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Product Name'}))
+    product_details = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter Product Details'}))
     class Meta:
         model = Product
         fields = '__all__'
-        exclude=['created_by', 'created_date']
+        exclude = ['created_by', 'created_date']
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class TaskForm(ModelForm):
+    task_details = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter Task Details'}))
+    remarks = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter Remarks'}))
+
+    class Meta:
+        model = Tasks
+        fields = '__all__'
+        exclude = ['created_by', 'created_date', 'assign_date', 'assigned_to', 'completed_by']
+        widgets = {
+            'deadline_date': DateInput(),
+        }

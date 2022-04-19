@@ -1,29 +1,7 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <script>
-        $(function () {
-            $("id_product").select2();
-        });
-        $(document).ready(function () {
 
-            // Initialize select2
-            $("#selUser").select2();
-
-            // Read selected option
-            $('#but_read').click(function () {
-                var username = $('#selUser option:selected').text();
-                var userid = $('#selUser').val();
-
-                $('#result').html("id : " + userid + ", name : " + username);
-
-            });
-        });
-        $(".jSelectbox").select2({
-            containerCssClass: "error",
-            dropdownCssClass: "js-example-basic-single"
-        });
-    </script>
     <main class="create-room layout">
         <div class="container">
             <div class="layout__box">
@@ -72,17 +50,20 @@
                         </div>
                         <div class="form__group">
                             <label>Product Type</label>
-                            <select id='selUser' name="product_type">
-                                <option value="">Select Type</option>
-                                <option value="Figurines">Figurines</option>
-                                <option value="Keychains">Keychains</option>
-                                <option value="Keycaps">Keycaps</option>
-                                <option value="Headphone Pouch">Headphone Pouch</option>
-                                <option value="Mousepads">Mousepads</option>
-                                <option value="Swords">Swords</option>
-                                <option value="Clothing">Clothing</option>
-                                <option value="Heirloom">Heirloom</option>
-                            </select>
+                            <input list="product_type" placeholder="Select Type" name='product_type'>
+                            <datalist id='product_type' name="product_type">
+{#                                <select>#}
+                                    {#                                <option value="">Select Type</option>#}
+                                    <option value="Figurines">
+                                    <option value="Keychains">
+                                    <option value="Keycaps">
+                                    <option value="Headphone Pouch">
+                                    <option value="Mousepads">
+                                    <option value="Swords">
+                                    <option value="Clothing">
+                                    <option value="Heirloom">
+{#                                </select>#}
+                            </datalist>
                             {#                                                        {{ form.product }}#}
                             {#                            <button onclick="myFunction()" class="dropbtn"></button>#}
                             {#                            <div id="myDropdown" class="dropdown-content">#}
@@ -102,11 +83,12 @@
                         </div>
                         <div class="form__group">
                             <label>Availability</label>
-                            <select class="js-example-basic-single" name="available">
-                                <option value="">Select Availability</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
+                            <input list="available" placeholder="Select Availability">
+                            <datalist id="available" name="available">
+                                {#                                <option value="">Select Availability</option>#}
+                                <option value="Yes">
+                                <option value="No">
+                            </datalist>
                             {#                            {{ form.quantity }}#}
                             <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
                         </div>
@@ -127,7 +109,7 @@
 
                         <div class="form__action">
                             <a class="btn btn--dark" href="{% url 'products' %}">Cancel</a>
-                            <button class="btn btn--main" type="submit" >Submit</button>
+                            <button class="btn btn--main" type="submit">Submit</button>
                         </div>
                     </form>
                 </div>

@@ -64,7 +64,8 @@ class Product(models.Model):
     product_id = models.CharField(max_length=200, null=True, blank=True)
     product_type = models.CharField(max_length=200, null=True, blank=True)
     available = models.CharField(max_length=200, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='product')
     created_date = models.DateTimeField(null=True, blank=True)
 
 
@@ -78,8 +79,22 @@ class Order(models.Model):
     customer_address = models.TextField(null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total_price = models.IntegerField(null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='order')
     created_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.product
+
+
+class Tasks(models.Model):
+    task_id = models.CharField(max_length=200, null=True, blank=True)
+    task_details = models.TextField(null=True)
+    assign_date = models.DateField(auto_now_add=True)
+    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assigned')
+    deadline_date = models.DateField()
+    completed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='complete')
+    remarks = models.TextField(null=True, blank=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='task')
+    created_date = models.DateTimeField(null=True, blank=True)

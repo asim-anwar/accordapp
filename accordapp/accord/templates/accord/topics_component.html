@@ -8,7 +8,6 @@
         {#        </li>#}
         {% for p in pages %}
             <li>
-
                 {% if p.id == 2 %}
                     {% if page == 'home' %}
                         <a href="{% url 'home' %}" class="active">{{ p.page_name }}
@@ -24,12 +23,12 @@
                     {% endif %}
                     <span>{{ products.count }}</span>
                 {% elif p.id == 4 %}
-                    {% if page == 'home' %}
-                        <a href="{% url 'home' %}" class="active">{{ p.page_name }}
+                    {% if page == 'tasks' %}
+                        <a href="{% url 'tasks' %}" class="active">{{ p.page_name }}
                     {% else %}
-                        <a href="{% url 'home' %}">{{ p.page_name }}
+                        <a href="{% url 'tasks' %}">{{ p.page_name }}
                     {% endif %}
-                    <span>{{ products.count }}</span>
+                    <span>{{ tasks.count }}</span>
                 {% endif %}
                 </a>
             </li>
