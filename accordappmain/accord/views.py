@@ -58,6 +58,7 @@ def signup(request):
     page = 'signup'
     if request.user.is_authenticated:
         return redirect('home')
+    error = ''
 
     form = MyUserCreationForm()
     if request.method == 'POST':
@@ -69,9 +70,10 @@ def signup(request):
             login(request, user)
             return redirect('home')
         else:
+            error = form.errors
             messages.error(request, 'Sign up unsuccessful, please try again later.')
 
-    context = {'page': page, 'form': form}
+    context = {'page': page, 'form': form, 'error': error}
     return render(request, 'accord/login_register.html', context)
 
 
