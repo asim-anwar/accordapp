@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-%k@^q-jo@qlugci%24jei_6qixp8$=e)852bp=71&m#kc%9o+h
 DEBUG = False
 
 # ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ["seikai-management.herokuapp.com/", '127.0.0.1']
+ALLOWED_HOSTS = ["*"]
 # ALLOWED_HOSTS = ['ad45-182-163-112-194.ngrok.io']
 
 
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'accord.apps.AccordConfig',
     'corsheaders',
     'rest_framework',
-    'accordappmain.accordapp'
+    'accordapp'
     # 'api',
 ]
 
