@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'accord.apps.AccordConfig',
     'corsheaders',
     'rest_framework',
-    'accordapp'
+    'accordappmain.accordapp'
     # 'api',
 ]
 
