@@ -1,1 +1,1 @@
-web: gunicorn accordapp.wsgi
+web: gunicorn accord.wsgi
