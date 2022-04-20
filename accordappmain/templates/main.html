@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="{% static 'images/seikai_logo.png' %}" type="image/x-icon"/>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <title>Seikai</title>
+</head>
+
+<body>
+
+{% include 'navbar.html' %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for posts in post %}
+            <li>{{ post }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+{% block content %}
+
+{% endblock %}
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
