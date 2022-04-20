@@ -1,1 +1,1 @@
-web: gunicorn accordapp.wsgi --log-file -
+web: gunicorn accordapp.wsgi
