@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accord.apps.AccordConfig',
     'corsheaders',
-    'rest_framework'
+    'rest_framework',
+    'accordapp'
     # 'api',
 ]
 
