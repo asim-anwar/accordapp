@@ -19,6 +19,7 @@ urlpatterns = [
     path('create_lobby/', views.create_lobby, name='create-lobby'),
     path('create_order/', views.create_order, name='create-order'),
     path('create_product/', views.create_product, name='create-product'),
+    path('update_product/', views.update_product, name='update-product'),
     path('create_task/', views.create_task, name='create-task'),
     path('update_lobby/<str:pk>/', views.update_lobby, name='update-lobby'),
     path('delete_lobby/<str:pk>/', views.deleteLobby, name='delete-lobby'),

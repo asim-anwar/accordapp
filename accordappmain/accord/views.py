@@ -24,6 +24,7 @@ from .forms import *
 
 def loginpage(request):
     page = 'login'
+    error = ''
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -43,9 +44,10 @@ def loginpage(request):
             login(request, user)
             return redirect('home')
         else:
+            error = 'Username or password incorrect'
             messages.error(request, 'Username or password incorrect')
 
-    context = {'page': page}
+    context = {'page': page, 'error': error}
     return render(request, 'accord/login_register.html', context)
 
 
@@ -94,6 +96,13 @@ def home(request):
 @login_required(login_url='login')
 def products(request):
     page = 'products'
+
+    if request.method == 'POST':
+        product = Product.objects.get(id=request.POST.get('product_id'))
+        available = request.POST.get('available')
+        # print(product, available)
+        product.available = available
+        product.save()
     # q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     orders = Order.objects.all()
@@ -249,7 +258,6 @@ def create_product(request):
         # quantity = request.POST.get('quantity')
         form = ProductForm(request.POST)
         ptype = request.POST.get('product_type')
-        print(ptype)
         pshort = 'FG' if ptype == 'Figurines' else 'KCN' if ptype == 'Keychains' else 'KC' if ptype == 'Keycaps' else 'SW' if ptype == 'Swords' else 'HP' if ptype == 'Headphone Pouch' else 'MP' if ptype == 'Mousepads' else 'JS' if ptype == 'Clothing' else 'HL' if ptype == 'Heirloom' else ''
         if form.is_valid():
             product = form.save(commit=False)
@@ -275,6 +283,29 @@ def create_product(request):
 
     context = {'page': page, 'form': form, 'error': error}
     return render(request, 'accord/create_update_product.html', context)
+
+
+@login_required(login_url='login')
+def update_product(request):
+    page = 'update-products'
+    # form = ProductForm()
+    error = ''
+
+    product = Product.objects.get(id=request.POST.get['product_id'])
+    available = request.POST.get['product_id']
+    print(product, available)
+    # if request.method == 'POST':
+    #     form = ProductForm(request.POST)
+    #     if form.is_valid():
+    #         product = form.save(commit=False)
+    #         product.save()
+    #     else:
+    #         error = form.errors
+    #
+    #     return redirect('products')
+
+    context = {'page': page, 'error': error}
+    return render(request, 'accord/feed_component_products.html', context)
 
 
 @login_required(login_url='login')
