@@ -285,28 +285,6 @@ def create_product(request):
     return render(request, 'accord/create_update_product.html', context)
 
 
-@login_required(login_url='login')
-def update_product(request):
-    page = 'update-products'
-    # form = ProductForm()
-    error = ''
-
-    product = Product.objects.get(id=request.POST.get['product_id'])
-    available = request.POST.get['product_id']
-    print(product, available)
-    # if request.method == 'POST':
-    #     form = ProductForm(request.POST)
-    #     if form.is_valid():
-    #         product = form.save(commit=False)
-    #         product.save()
-    #     else:
-    #         error = form.errors
-    #
-    #     return redirect('products')
-
-    context = {'page': page, 'error': error}
-    return render(request, 'accord/feed_component_products.html', context)
-
 
 @login_required(login_url='login')
 def create_task(request):
