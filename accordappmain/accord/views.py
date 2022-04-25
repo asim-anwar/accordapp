@@ -82,9 +82,17 @@ def signup(request):
 @login_required(login_url='login')
 def home(request):
     page = 'home'
-    # q = request.GET.get('q') if request.GET.get('q') != None else ''
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     orders = Order.objects.all()
+    if q != '':
+        orders = orders.filter(
+            Q(customer_name__icontains=q) |
+            Q(product__product_name__icontains=q) |
+            Q(customer_contactnumber__contains=q) |
+            Q(order_id__contains=q) |
+            Q(product__product_id__contains=q))
+
     products = Product.objects.all()
     pages = Pages.objects.all()
     tasks = Tasks.objects.filter(assigned_to=request.user)
@@ -103,10 +111,18 @@ def products(request):
         # print(product, available)
         product.available = available
         product.save()
-    # q = request.GET.get('q') if request.GET.get('q') != None else ''
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     orders = Order.objects.all()
     products = Product.objects.all()
+    if q != '':
+        products = products.filter(
+            Q(product_name__icontains=q) |
+            Q(price__contains=q) |
+            Q(product_type__contains=q) |
+            Q(product_id__contains=q) |
+            Q(available__contains=q))
+
     pages = Pages.objects.all()
     tasks = Tasks.objects.filter(assigned_to=request.user)
 
@@ -117,23 +133,25 @@ def products(request):
 @login_required(login_url='login')
 def tasks(request):
     page = 'tasks'
-    # q = request.GET.get('q') if request.GET.get('q') != None else ''
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    # lobbys = Lobby.objects.filter(
-    #     Q(topic__name__icontains=q) |
-    #     Q(name__icontains=q) |
-    #     Q(description__contains=q)
-    # )
+    if request.user.id == 1:
+        tasks = Tasks.objects.all()
+    else:
+        tasks = Tasks.objects.filter(assigned_to=request.user)
+
+    if q != '':
+        tasks = tasks.filter(
+            Q(completed_by__icontains=q) |
+            Q(assigned_to__icontains=q) |
+            Q(task_id__contains=q)
+        )
     # topics = Topic.objects.all()[0:6]
     # lobby_count = lobbys.count
     # posts = Post.objects.filter(lobby__topic__name__icontains=q)[0:4]
     orders = Order.objects.all()
     products = Product.objects.all()
     pages = Pages.objects.all()
-    if request.user.id == 1:
-        tasks = Tasks.objects.all()
-    else:
-        tasks = Tasks.objects.filter(assigned_to=request.user)
 
     context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
     return render(request, 'accord/tasks.html', context)
@@ -216,8 +234,8 @@ def create_order(request):
     # topics = Topic.objects.all()
 
     if request.method == 'POST':
-        Price = Product.objects.get(id=request.POST.get('product')).price
-        product_id = Product.objects.get(id=request.POST.get('product')).id
+        Price = Product.objects.get(product_id=request.POST.get('product')).price
+        product_id = Product.objects.get(product_id=request.POST.get('product')).id
         quantity = request.POST.get('quantity')
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -230,6 +248,7 @@ def create_order(request):
             order.save()
         else:
             error = form.errors
+            print(error)
 
         # Order.objects.create(
         #     customer_name=request.POST.get('customer_name'),
@@ -283,7 +302,6 @@ def create_product(request):
 
     context = {'page': page, 'form': form, 'error': error}
     return render(request, 'accord/create_update_product.html', context)
-
 
 
 @login_required(login_url='login')

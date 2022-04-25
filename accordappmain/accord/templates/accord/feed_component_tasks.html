@@ -1,14 +1,103 @@
 {#<h2>Product List</h2>#}
 
 <style>
+
+    .btn {
+        background-color: #ed6a4c;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+    {#cursor: pointer;#}{#opacity: 0.8;#}{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
+    }
+
+    .action-btn {
+        background-color: #ed6a4c;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 800;
+        cursor: pointer;{#opacity: 0.8;{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
+    }
+
+    .action-btn:hover{
+        color: #565656;
+        {#background-color: #ed6a4c;#}
+        {#border: 1px solid black;#}
+        opacity: 90%;
+    }
+
+    /* The popup form - hidden by default */
+    .form-popup {
+        display: none;
+        position: fixed;
+        bottom: 300px;
+        right: 700px;
+        border: 3px solid  #fc4b0b;
+        border-radius: 15px;
+        {#z-index: 9;#}
+    }
+
+    /* Add styles to the form container */
+    .form-container {
+        max-width: 300px;
+        padding: 10px;
+        background-color: #ffcfa5;
+        border-radius: 10px;
+    }
+
+    /* Full-width input fields */
+    .form-container input[type=select], .form-container input[type=password] {
+        width: 100%;
+        padding: 15px 10px;
+        margin: 5px 0 22px 0;
+        border: 1px solid  #fc4b0b;
+        border-radius: 5px;
+        background: #FFF3E8;
+    }
+
+    /* When the inputs get focus, do something */
+    .form-container input[type=select]:focus, .form-container input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+    }
+
+    /* Set a style for the submit/login button */
+    .form-container .btn {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 30%;
+        font-size: 12px;
+        margin-bottom: 10px;
+        opacity: 0.8;
+    }
+
+    /* Add a red background color to the cancel button */
+    .form-container .cancel {
+        background-color: red;
+    }
+
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover {
+        opacity: 1;
+    }
+
     td {
         border-right: 1px solid black;
         height: auto;
         width: auto;
         text-align: center;
-        vertical-align: middle;
-        border-bottom: 1px solid var(--color-dark-medium);
-        padding-top: 1rem;
+        vertical-align: center;
+        border-bottom: 1px solid #fc4b0b;
+        {#padding-top: 1rem;#}
+        padding: 0.8rem;
+        border-radius: 5px;
     }
 
     tr {
@@ -22,16 +111,18 @@
         border-left: 1px solid black;
         border-right: 1px solid black;
         border-bottom: 1px solid black;
-        border-radius: 5px;
+        {#border-radius: 5px;#}
+        padding: 0.5rem;
         width: auto;
-        color: #fc4b0b;
+        color: white;
         position: sticky;
         top: 0;
-        background-color: #ffcfa5;
+        background-color: #ed6a4c;
     }
+
 </style>
-<div style="height:700px;overflow:auto;border-radius: 10px;">
-    <table style="width:100%; border-radius: 10px;  border: 3px solid black; background-color: #ffe1db">
+<div style="max-height:700px;min-height:80px;overflow:auto;border: 3px solid black; border-radius: 10px;">
+    <table style="width:100%; border-radius: 10px; background-color: #ffe1db">
         <tr>
             <th>Task ID</th>
             <th>Task Details</th>
@@ -46,64 +137,11 @@
             <th>Remarks</th>
         </tr>
 
-        {#{% for lobby in lobbys %}#}
-        {##}
-        {#<div class="roomListRoom">#}
-        {#            <div class="roomListRoom__header">#}
-        {#              <a href="{% url 'user-profile' lobby.host.id%}" class="roomListRoom__author">#}
-        {#                <div class="avatar avatar--small">#}
-        {#                  <img src="{{lobby.host.avatar.url}}" />#}
-        {#                </div>#}
-        {#                <span>@{{lobby.host.username}}</span>#}
-        {#              </a>#}
-        {#              <div class="roomListRoom__actions">#}
-        {#                <span>{{lobby.created|timesince}} ago</span>#}
-        {#              </div>#}
-        {#            </div>#}
-        {#            <div class="roomListRoom__content">#}
-        {#              <a href="{%url 'lobby' lobby.id%}">{{lobby.name}}</a>#}
-        {#            </div>#}
-        {#            <div class="roomListRoom__meta">#}
-        {#              <a href="{%url 'lobby' lobby.id%}" class="roomListRoom__joined">#}
-        {#                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">#}
-        {#                  <title>user-group</title>#}
-        {#                  <path#}
-        {#                    d="M30.539 20.766c-2.69-1.547-5.75-2.427-8.92-2.662 0.649 0.291 1.303 0.575 1.918 0.928 0.715 0.412 1.288 1.005 1.71 1.694 1.507 0.419 2.956 1.003 4.298 1.774 0.281 0.162 0.456 0.487 0.456 0.85v4.65h-4v2h5c0.553 0 1-0.447 1-1v-5.65c0-1.077-0.56-2.067-1.461-2.584z"#}
-        {#                  ></path>#}
-        {#                  <path#}
-        {#                    d="M22.539 20.766c-6.295-3.619-14.783-3.619-21.078 0-0.901 0.519-1.461 1.508-1.461 2.584v5.65c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-5.651c0-1.075-0.56-2.064-1.461-2.583zM22 28h-20v-4.65c0-0.362 0.175-0.688 0.457-0.85 5.691-3.271 13.394-3.271 19.086 0 0.282 0.162 0.457 0.487 0.457 0.849v4.651z"#}
-        {#                  ></path>#}
-        {#                  <path#}
-        {#                    d="M19.502 4.047c0.166-0.017 0.33-0.047 0.498-0.047 2.757 0 5 2.243 5 5s-2.243 5-5 5c-0.168 0-0.332-0.030-0.498-0.047-0.424 0.641-0.944 1.204-1.513 1.716 0.651 0.201 1.323 0.331 2.011 0.331 3.859 0 7-3.141 7-7s-3.141-7-7-7c-0.688 0-1.36 0.131-2.011 0.331 0.57 0.512 1.089 1.075 1.513 1.716z"#}
-        {#                  ></path>#}
-        {#                  <path#}
-        {#                    d="M12 16c3.859 0 7-3.141 7-7s-3.141-7-7-7c-3.859 0-7 3.141-7 7s3.141 7 7 7zM12 4c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5c0-2.757 2.243-5 5-5z"#}
-        {#                  ></path>#}
-        {#                </svg>#}
-        {#                {{lobby.participants.all.count}} Joined#}
-        {#              </a>#}
-        {#              <p class="roomListRoom__topic">{{lobby.topic.name}}</p>#}
-        {#            </div>#}
-        {#          </div>#}
-        {##}
-        {#{% endfor %}#}
-
         {% for task in tasks %}
 
             <tr>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
-                    {#                      <a href="{% url 'user-profile' lobby.host.id%}" class="roomListRoom__author">#}
-                    {#                      <a href="{% url 'order-list' %}" class="roomListRoom__author">#}
-                    {#                        <div class="avatar avatar--small">#}
-                    {#                          <img src="{{lobby.host.avatar.url}}" />#}
-                    {#                        </div>#}
                     <span>{{ task.task_id }}</span>
-                    {#                      </a>#}
-                    {#                      <div class="roomListRoom__actions">#}
-                    {#                        <span>{{lobby.created|timesince}} ago</span>#}
-                    {#                      </div>#}
-                    {#                </div>#}
                 </td>
                 <td>
                     {#                <div class="roomListRoom__meta">#}
@@ -112,45 +150,10 @@
                 </td>
 
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
-                    {#                    <a href="{% url 'order-list' %}" class="roomListRoom__joined">#}
-                    {#                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">#}
-                    {#                          <title>user-group</title>#}
-                    {#                          <path#}
-                    {#                            d="M30.539 20.766c-2.69-1.547-5.75-2.427-8.92-2.662 0.649 0.291 1.303 0.575 1.918 0.928 0.715 0.412 1.288 1.005 1.71 1.694 1.507 0.419 2.956 1.003 4.298 1.774 0.281 0.162 0.456 0.487 0.456 0.85v4.65h-4v2h5c0.553 0 1-0.447 1-1v-5.65c0-1.077-0.56-2.067-1.461-2.584z"#}
-                    {#                          ></path>#}
-                    {#                          <path#}
-                    {#                            d="M22.539 20.766c-6.295-3.619-14.783-3.619-21.078 0-0.901 0.519-1.461 1.508-1.461 2.584v5.65c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-5.651c0-1.075-0.56-2.064-1.461-2.583zM22 28h-20v-4.65c0-0.362 0.175-0.688 0.457-0.85 5.691-3.271 13.394-3.271 19.086 0 0.282 0.162 0.457 0.487 0.457 0.849v4.651z"#}
-                    {#                          ></path>#}
-                    {#                          <path#}
-                    {#                            d="M19.502 4.047c0.166-0.017 0.33-0.047 0.498-0.047 2.757 0 5 2.243 5 5s-2.243 5-5 5c-0.168 0-0.332-0.030-0.498-0.047-0.424 0.641-0.944 1.204-1.513 1.716 0.651 0.201 1.323 0.331 2.011 0.331 3.859 0 7-3.141 7-7s-3.141-7-7-7c-0.688 0-1.36 0.131-2.011 0.331 0.57 0.512 1.089 1.075 1.513 1.716z"#}
-                    {#                          ></path>#}
-                    {#                          <path#}
-                    {#                            d="M12 16c3.859 0 7-3.141 7-7s-3.141-7-7-7c-3.859 0-7 3.141-7 7s3.141 7 7 7zM12 4c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5c0-2.757 2.243-5 5-5z"#}
-                    {#                          ></path>#}
-                    {#                        </svg>#}
+
                     {{ task.assigned_to.username }}
-                    {#                    </a>#}
-                    {#                      <p class="roomListRoom__topic">{{lobby.topic.name}}</p>#}
-                    {#                </div>#}
+
                 </td>
-
-                {#                <td>#}
-                {#                <div class="roomListRoom__meta">#}
-                {#                        <span>{{ product.quantity }}</span>#}
-                {#                </div>#}
-                {#                </td>#}
-                {#                <td>#}
-                {#                <div class="roomListRoom__meta">#}
-                {#                        <span>{{ product.customer_name }}</span>#}
-                {#                </div>#}
-                {#                </td>#}
-                {#                <td>#}
-                {#                <div class="roomListRoom__meta">#}
-                {#                        <span>{{ product.customer_contactnumber }}</span>#}
-                {#                </div>#}
-                {#                </td>#}
-
                 <td>
                     {#                <div class="roomListRoom__meta">#}
                     <span id="price">{{ task.assign_date }}</span>
