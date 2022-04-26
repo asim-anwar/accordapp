@@ -1,13 +1,26 @@
 {% load static %}
+<style>
+    .header .container {
+        display: flow;
+        gap: 35rem;
+    }
+
+    .header__menu svg {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: #eabaaf;
+    }
+</style>
 <header class="header header--loggedIn">
     <div class="container">
         <a href="{% url 'home' %}" class="header__logo">
-{#            <img src="{% static 'images/seikai_logo.png' %}"/>#}
-            <img style="image-rendering: high-quality; width: 200px; height: 100px" src="{% static 'images/NavLogo2.png' %}"/>
+            {#            <img src="{% static 'images/seikai_logo.png' %}"/>#}
+            <img style="image-rendering: high-quality; width: 200px; height: 100px"
+                 src="{% static 'images/NavLogo2.png' %}"/>
             {#          <h1>AccorD</h1>#}
             {#          <h1 style="font-family: billiyana; color: #ed6a4c">Seikai</h1>#}
         </a>
-        {% if page == 'home' or page == 'products' or page == 'tasks'%}
+        {% if page == 'home' or page == 'products' or page == 'tasks' %}
             <form class="header__search" method="GET" action="">
                 <label>
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="40" viewBox="0 0 32 32">

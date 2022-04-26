@@ -95,7 +95,10 @@ def home(request):
 
     products = Product.objects.all()
     pages = Pages.objects.all()
-    tasks = Tasks.objects.filter(assigned_to=request.user)
+    if request.user.id == 1:
+        tasks = Tasks.objects.all()
+    else:
+        tasks = Tasks.objects.filter(assigned_to=request.user)
 
     context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
     return render(request, 'accord/home.html', context)
@@ -124,7 +127,10 @@ def products(request):
             Q(available__contains=q))
 
     pages = Pages.objects.all()
-    tasks = Tasks.objects.filter(assigned_to=request.user)
+    if request.user.id == 1:
+        tasks = Tasks.objects.all()
+    else:
+        tasks = Tasks.objects.filter(assigned_to=request.user)
 
     context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
     return render(request, 'accord/products.html', context)
