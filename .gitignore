@@ -177,3 +177,4 @@ ipdc/.vscode
 .vscode/launch.json
 accordappmain/accord/__pycache__/forms.cpython-39.pyc
 *.pyc
+*.pyc
