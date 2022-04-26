@@ -8,21 +8,21 @@
         {#        </li>#}
         {% for p in pages %}
             <li>
-                {% if p.id == 2 %}
+                {% if p.id == 1 %}
                     {% if page == 'home' %}
                         <a href="{% url 'home' %}" class="active">{{ p.page_name }}
                     {% else %}
                         <a href="{% url 'home' %}">{{ p.page_name }}
                     {% endif %}
                     <span>{{ orders.count }}</span>
-                {% elif p.id == 3 %}
+                {% elif p.id == 2 %}
                     {% if page == 'products' %}
                         <a href="{% url 'products' %}" class="active">{{ p.page_name }}
                     {% else %}
                         <a href="{% url 'products' %}">{{ p.page_name }}
                     {% endif %}
                     <span>{{ products.count }}</span>
-                {% elif p.id == 4 %}
+                {% elif p.id == 3 %}
                     {% if page == 'tasks' %}
                         <a href="{% url 'tasks' %}" class="active">{{ p.page_name }}
                     {% else %}
