@@ -82,6 +82,14 @@ def signup(request):
 @login_required(login_url='login')
 def home(request):
     page = 'home'
+
+    if request.method == 'POST':
+        order = Order.objects.get(id=request.POST.get('order_id'))
+        # available = request.POST.get('available')
+        # print(product, available)
+        order.status = 2
+        order.save()
+
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     orders = Order.objects.all()
@@ -139,6 +147,14 @@ def products(request):
 @login_required(login_url='login')
 def tasks(request):
     page = 'tasks'
+
+    if request.method == 'POST':
+        task = Tasks.objects.get(id=request.POST.get('task_id'))
+        # available = request.POST.get('available')
+        # print(product, available)
+        task.status = 2
+        task.save()
+
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     if request.user.id == 1:

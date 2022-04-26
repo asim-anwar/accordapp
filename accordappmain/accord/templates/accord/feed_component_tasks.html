@@ -1,4 +1,14 @@
 {#<h2>Product List</h2>#}
+<script>
+    function openForm(id) {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("task_id").value = id
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+    }
+</script>
 
 <style>
 
@@ -15,8 +25,7 @@
     .action-btn {
         background-color: #ed6a4c;
         color: white;
-        {#padding: 10px 15px;#}
-        border: none;
+    {#padding: 10px 15px;#} border: none;
         border-radius: 10px;
         font-size: 10px;
         font-weight: 800;
@@ -94,7 +103,7 @@
         text-align: center;
         vertical-align: center;
         border-bottom: 1px solid #fc4b0b;
-    {#padding-top: 1rem;#} padding: 0.8rem;
+    {#padding-top: 1rem;#} padding: 0.5rem;
         border-radius: 5px;
     }
 
@@ -109,7 +118,7 @@
         border-left: 1px solid black;
         border-right: 1px solid black;
         border-bottom: 1px solid black;
-    border-radius: 5px;
+        border-radius: 5px;
         padding: 0.5rem;
         width: auto;
         color: white;
@@ -171,7 +180,15 @@
                     {#                </div>#}
                 </td>
                 <td>
-                    <button class="action-btn" onclick="openForm({{ product.id }})"><img src="https://img.icons8.com/external-smashingstocks-hand-drawn-black-smashing-stocks/40/ffffff/external-incomplete-data-analytics-smashingstocks-hand-drawn-black-smashing-stocks.png"/></button>
+                    {% if task.status == 1 %}
+                        <button class="action-btn" onclick="openForm({{ task.id }})"><img
+                                src="https://img.icons8.com/external-smashingstocks-hand-drawn-black-smashing-stocks/40/ffffff/external-incomplete-data-analytics-smashingstocks-hand-drawn-black-smashing-stocks.png"/>
+                        </button>
+                    {% elif task.status == 2 %}
+                        <button class="action-btn" style="background-color: #FFE1DB"><img
+                                src="https://img.icons8.com/external-sbts2018-flat-sbts2018/40/ffffff/external-correct-basic-ui-elements-2.2-sbts2018-flat-sbts2018.png"/>
+                        </button>
+                    {% endif %}
                 </td>
             </tr>
 
@@ -180,6 +197,30 @@
         {#        <script>preorder()</script>#}
 
     </table>
+    <div class="form-popup" id="myForm">
+        <form action="" class="form-container" method="POST">
+            {% csrf_token %}
+            {#            <h1>Update Availability</h1>#}
+
+            <label for="available"><b>Task Complete?</b></label>
+{#            <input type="select" list="available" placeholder="Select Availability" name="available">#}
+{#            <datalist id="available" name="available">#}
+                {#                                <option value="">Select Availability</option>#}
+{#                <option value="Yes">#}
+{#                <option value="No">#}
+{#            </datalist>#}
+
+            <input id="task_id" type="hidden" name="task_id">
+
+            {#            <label for="psw"><b>Password</b></label>#}
+            {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
+
+            <div>
+                <button type="submit" class="btn">Yes</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">No</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 

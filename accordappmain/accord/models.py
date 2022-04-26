@@ -79,6 +79,7 @@ class Order(models.Model):
     customer_address = models.TextField(null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total_price = models.IntegerField(null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True)
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='order')
     created_date = models.DateTimeField(null=True, blank=True)
@@ -95,6 +96,7 @@ class Tasks(models.Model):
     deadline_date = models.DateField()
     completed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='complete')
     remarks = models.TextField(null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True)
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='task')
     created_date = models.DateTimeField(null=True, blank=True)

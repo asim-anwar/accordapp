@@ -1,4 +1,14 @@
 {#<h2>Order List</h2>#}
+<script>
+    function openForm(id) {
+        document.getElementById("myForm").style.display = "block";
+        document.getElementById("order_id").value = id
+    }
+
+    function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+    }
+</script>
 
 <style>
 
@@ -15,8 +25,7 @@
     .action-btn {
         background-color: #ED6A4C;
         color: white;
-        {#padding: 10px 15px;#}
-        border: none;
+    {#padding: 10px 15px;#} border: none;
         border-radius: 10px;
         font-size: 10px;
         font-weight: 800;
@@ -109,7 +118,7 @@
         border-left: 1px solid black;
         border-right: 1px solid black;
         border-bottom: 1px solid black;
-    border-radius: 5px;
+        border-radius: 5px;
         padding: 0.5rem;
         width: auto;
         color: white;
@@ -253,11 +262,42 @@
                     {#                </div>#}
                 </td>
                 <td>
-                    <button class="action-btn" onclick="openForm({{product.id}})"><img src="https://img.icons8.com/external-itim2101-lineal-itim2101/40/ffffff/external-deliveryman-logistics-itim2101-lineal-itim2101-1.png"/></button>
+                    {% if order.status == 1 %}
+                        <button class="action-btn" onclick="openForm({{ order.id }})"><img
+                                src="https://img.icons8.com/external-itim2101-lineal-itim2101/40/ffffff/external-deliveryman-logistics-itim2101-lineal-itim2101-1.png"/>
+                        </button>
+                    {% elif order.status == 2 %}
+                        <button class="action-btn"><img
+                                src="https://img.icons8.com/external-xnimrodx-blue-xnimrodx/40/ffffff/external-box-e-commerce-and-business-xnimrodx-blue-xnimrodx-5.png"/>
+                        </button>
+                    {% endif %}
                 </td>
             </tr>
 
 
         {% endfor %}
     </table>
+    <div class="form-popup" id="myForm">
+        <form action="" class="form-container" method="POST">
+            {% csrf_token %}
+            {#            <h1>Update Availability</h1>#}
+
+            <label for="available"><b>Order Delivered?</b></label>
+            {#            <input type="select" list="available" placeholder="Select Availability" name="available">#}
+            {#            <datalist id="available" name="available">#}
+            {#                                <option value="">Select Availability</option>#}
+            {#                <option value="Yes">#}
+            {#                <option value="No">#}
+            {#            </datalist>#}
+
+            <input id="order_id" type="hidden" name="order_id">
+
+            {#            <label for="psw"><b>Password</b></label>#}
+            {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
+            <div>
+                <button type="submit" class="btn">Yes</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">No</button>
+            </div>
+        </form>
+    </div>
 </div>
