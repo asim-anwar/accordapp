@@ -15,19 +15,18 @@
     .action-btn {
         background-color: #ed6a4c;
         color: white;
-        padding: 10px 15px;
+        {#padding: 10px 15px;#}
         border: none;
         border-radius: 10px;
         font-size: 10px;
         font-weight: 800;
-        cursor: pointer;{#opacity: 0.8;{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
+        cursor: pointer;
+    {#opacity: 0.8;{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
     }
 
-    .action-btn:hover{
+    .action-btn:hover {
         color: #565656;
-        {#background-color: #ed6a4c;#}
-        {#border: 1px solid black;#}
-        opacity: 90%;
+    {#background-color: #ed6a4c;#}{#border: 1px solid black;#} opacity: 90%;
     }
 
     /* The popup form - hidden by default */
@@ -36,9 +35,9 @@
         position: fixed;
         bottom: 300px;
         right: 700px;
-        border: 3px solid  #fc4b0b;
+        border: 3px solid #fc4b0b;
         border-radius: 15px;
-        {#z-index: 9;#}
+    {#z-index: 9;#}
     }
 
     /* Add styles to the form container */
@@ -54,7 +53,7 @@
         width: 100%;
         padding: 15px 10px;
         margin: 5px 0 22px 0;
-        border: 1px solid  #fc4b0b;
+        border: 1px solid #fc4b0b;
         border-radius: 5px;
         background: #FFF3E8;
     }
@@ -95,8 +94,7 @@
         text-align: center;
         vertical-align: center;
         border-bottom: 1px solid #fc4b0b;
-        {#padding-top: 1rem;#}
-        padding: 0.8rem;
+    {#padding-top: 1rem;#} padding: 0.8rem;
         border-radius: 5px;
     }
 
@@ -111,8 +109,7 @@
         border-left: 1px solid black;
         border-right: 1px solid black;
         border-bottom: 1px solid black;
-        {#border-radius: 5px;#}
-        padding: 0.5rem;
+    {#border-radius: 5px;#} padding: 0.5rem;
         width: auto;
         color: white;
         position: sticky;
@@ -127,14 +124,11 @@
             <th>Task ID</th>
             <th>Task Details</th>
             <th>Assigned To</th>
-            {#            <th>Quantity</th>#}
-            {#            <th>Customer Name</th>#}
-            {#            <th>Customer Mobile</th>#}
-            {#            <th>Customer Address</th>#}
             <th>Assigned Date</th>
             <th>Deadline</th>
             <th>Completed By</th>
             <th>Remarks</th>
+            <th>Status</th>
         </tr>
 
         {% for task in tasks %}
@@ -174,6 +168,9 @@
                     {#                <div class="roomListRoom__meta">#}
                     <span>{{ task.remarks }}</span>
                     {#                </div>#}
+                </td>
+                <td>
+                    <button class="action-btn" onclick="openForm({{ product.id }})"><img src="https://img.icons8.com/external-smashingstocks-hand-drawn-black-smashing-stocks/40/ffffff/external-incomplete-data-analytics-smashingstocks-hand-drawn-black-smashing-stocks.png"/></button>
                 </td>
             </tr>
 
