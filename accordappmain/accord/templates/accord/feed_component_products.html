@@ -19,25 +19,26 @@
         border: none;
         border-radius: 10px;
         font-size: 15px;
+        margin-top: 10px;
     {#cursor: pointer;#}{#opacity: 0.8;#}{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
     }
 
     .action-btn {
-        background-color: #ed6a4c;
+        background-color: #ED6A4C;
         color: white;
-        {#padding: 10px 15px;#}
+        padding: 5px;
         border: none;
         border-radius: 10px;
-        font-size: 10px;
-        font-weight: 800;
-        cursor: pointer;{#opacity: 0.8;{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
+        font-size: 13px;
+        font-weight: bolder;
+        cursor: pointer;
+        min-width: 100%;
+    {#opacity: 0.8;{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
     }
 
-    .action-btn:hover{
+    .action-btn:hover {
         color: #565656;
-        {#background-color: #ed6a4c;#}
-        {#border: 1px solid black;#}
-        opacity: 90%;
+    {#background-color: #ed6a4c;#}{#border: 1px solid black;#} opacity: 90%;
     }
 
     /* The popup form - hidden by default */
@@ -46,9 +47,9 @@
         position: fixed;
         bottom: 300px;
         right: 700px;
-        border: 3px solid  #fc4b0b;
+        border: 3px solid #fc4b0b;
         border-radius: 15px;
-        {#z-index: 9;#}
+    {#z-index: 9;#}
     }
 
     /* Add styles to the form container */
@@ -64,7 +65,7 @@
         width: 100%;
         padding: 15px 10px;
         margin: 5px 0 22px 0;
-        border: 1px solid  #fc4b0b;
+        border: 1px solid #fc4b0b;
         border-radius: 5px;
         background: #FFF3E8;
     }
@@ -79,12 +80,12 @@
     .form-container .btn {
         background-color: #04AA6D;
         color: white;
-        padding: 16px 20px;
+        padding: 5%;
         border: none;
         cursor: pointer;
-        width: 30%;
-        font-size: 12px;
+        font-size: 15px;
         margin-bottom: 10px;
+        margin-left: 15%;
         opacity: 0.8;
     }
 
@@ -105,8 +106,7 @@
         text-align: center;
         vertical-align: center;
         border-bottom: 1px solid #fc4b0b;
-        {#padding-top: 1rem;#}
-        padding: 0.8rem;
+    {#padding-top: 1rem;#} padding: 0.8rem;
         border-radius: 5px;
     }
 
@@ -145,7 +145,6 @@
             <th>Preorder</th>
             <th>Product Type</th>
             <th>Availability</th>
-            <th>Update</th>
         </tr>
 
         {#{% for lobby in lobbys %}#}
@@ -269,13 +268,15 @@
                     <span>{{ product.product_type }}</span>
                     {#                </div>#}
                 </td>
-                <td>
+{#                <td>#}
                     {#                <div class="roomListRoom__meta">#}
-                    <span>{{ product.available }}</span>
+{#                    <span>{{ product.available }}</span>#}
                     {#                </div>#}
-                </td>
+{#                </td>#}
                 <td>
-                    <button class="action-btn" onclick="openForm({{product.id}})"><img src="https://img.icons8.com/dotty/40/ffffff/upgrade.png"/></button>
+{#                    <button class="action-btn" onclick="openForm({{ product.id }})"><img#}
+{#                            src="https://img.icons8.com/dotty/40/ffffff/upgrade.png"/></button>#}
+                    <button class="action-btn" onclick="openForm({{ product.id }})">{{ product.available }}</button>
                 </td>
             </tr>
 
@@ -285,12 +286,19 @@
 
     </table>
     <div class="form-popup" id="myForm">
-        <form action="" class="form-container" method="POST">
+        <form action="" class="form-container" method="POST" autocomplete="off">
             {% csrf_token %}
-{#            <h1>Update Availability</h1>#}
+            {#            <h1>Update Availability</h1>#}
 
-            <label for="available"><b>Update Availability</b></label>
-            <input type="select" list="available" placeholder="Select Availability" name="available">
+            <label for="available"><b style="font-size: 20px; margin-left: 18%">Update Availability</b></label>
+            <input type="search" list="available" placeholder="Select Availability" name="available" style="background: #eabaaf;
+  border: 1px solid var(--color-dark-light);
+  padding: 1rem;
+  border-radius: 3px;
+  width: 100%;
+  color: var(--color-light);
+  font-weight: 500;
+  outline: none;">
             <datalist id="available" name="available">
                 {#                                <option value="">Select Availability</option>#}
                 <option value="Yes">
@@ -299,8 +307,8 @@
 
             <input id="product_id" type="hidden" name="product_id">
 
-{#            <label for="psw"><b>Password</b></label>#}
-{#            <input type="password" placeholder="Enter Password" name="psw" required>#}
+            {#            <label for="psw"><b>Password</b></label>#}
+            {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
 
             <button type="submit" class="btn">Submit</button>
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>

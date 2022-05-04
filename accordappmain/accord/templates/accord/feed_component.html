@@ -25,16 +25,19 @@
     .action-btn {
         background-color: #ED6A4C;
         color: white;
-    {#padding: 10px 15px;#} border: none;
+        padding: 5px;
+        border: 2px solid #ED6A4C;
         border-radius: 10px;
-        font-size: 10px;
-        font-weight: 800;
+        font-size: 13px;
+        font-weight: bolder;
         cursor: pointer;
     {#opacity: 0.8;{#position: fixed;#}{#bottom: 23px;#}{#right: 28px;#}{#width: 280px;#}
     }
 
     .action-btn:hover {
-        color: #565656;
+        color: #ed6a4c;
+        background: #ffcfa5;
+        border: 2px solid #ed6a4c;
     {#background-color: #ed6a4c;#}{#border: 1px solid black;#} opacity: 90%;
     }
 
@@ -42,8 +45,8 @@
     .form-popup {
         display: none;
         position: fixed;
-        bottom: 300px;
-        right: 700px;
+        bottom: 30%;
+        right: 38%;
         border: 3px solid #fc4b0b;
         border-radius: 15px;
     {#z-index: 9;#}
@@ -51,8 +54,8 @@
 
     /* Add styles to the form container */
     .form-container {
-        max-width: 300px;
-        padding: 10px;
+        max-width: 100%;
+        padding: 3rem;
         background-color: #ffcfa5;
         border-radius: 10px;
     }
@@ -77,12 +80,13 @@
     .form-container .btn {
         background-color: #04AA6D;
         color: white;
-        padding: 16px 20px;
+        padding: 5%;
         border: none;
         cursor: pointer;
-        width: 30%;
-        font-size: 12px;
+        font-size: 15px;
         margin-bottom: 10px;
+        margin-top: 10px;
+        margin-left: 60px;
         opacity: 0.8;
     }
 
@@ -127,150 +131,84 @@
     {#background-color: #fc4b0b;#} background-color: #ED6A4C;
     }
 
+    #order_details {
+        color: #fc4b0b;
+    }
+
+    #order_details:hover {
+        color: crimson;
+        font-weight: bold;
+    }
+
 </style>
 <div style="max-height:700px;min-height:80px;overflow:auto;border: 3px solid black; border-radius: 10px;">
     <table style="width:100%; border-radius: 10px; background-color: #ffe1db">
         <tr>
             <th>Order ID</th>
             <th>Product Name</th>
-            <th>Product Details</th>
+{#            <th>Product Details</th>#}
             <th>Product ID</th>
             <th>Quantity</th>
             <th>Customer Name</th>
             <th>Customer Mobile</th>
+            <th>Customer Email</th>
             <th>Customer Address</th>
+            <th>Delivery Address</th>
             <th>Total</th>
             <th>Status</th>
         </tr>
 
-        {#{% for lobby in lobbys %}#}
-        {##}
-        {#<div class="roomListRoom">#}
-        {#            <div class="roomListRoom__header">#}
-        {#              <a href="{% url 'user-profile' lobby.host.id%}" class="roomListRoom__author">#}
-        {#                <div class="avatar avatar--small">#}
-        {#                  <img src="{{lobby.host.avatar.url}}" />#}
-        {#                </div>#}
-        {#                <span>@{{lobby.host.username}}</span>#}
-        {#              </a>#}
-        {#              <div class="roomListRoom__actions">#}
-        {#                <span>{{lobby.created|timesince}} ago</span>#}
-        {#              </div>#}
-        {#            </div>#}
-        {#            <div class="roomListRoom__content">#}
-        {#              <a href="{%url 'lobby' lobby.id%}">{{lobby.name}}</a>#}
-        {#            </div>#}
-        {#            <div class="roomListRoom__meta">#}
-        {#              <a href="{%url 'lobby' lobby.id%}" class="roomListRoom__joined">#}
-        {#                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">#}
-        {#                  <title>user-group</title>#}
-        {#                  <path#}
-        {#                    d="M30.539 20.766c-2.69-1.547-5.75-2.427-8.92-2.662 0.649 0.291 1.303 0.575 1.918 0.928 0.715 0.412 1.288 1.005 1.71 1.694 1.507 0.419 2.956 1.003 4.298 1.774 0.281 0.162 0.456 0.487 0.456 0.85v4.65h-4v2h5c0.553 0 1-0.447 1-1v-5.65c0-1.077-0.56-2.067-1.461-2.584z"#}
-        {#                  ></path>#}
-        {#                  <path#}
-        {#                    d="M22.539 20.766c-6.295-3.619-14.783-3.619-21.078 0-0.901 0.519-1.461 1.508-1.461 2.584v5.65c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-5.651c0-1.075-0.56-2.064-1.461-2.583zM22 28h-20v-4.65c0-0.362 0.175-0.688 0.457-0.85 5.691-3.271 13.394-3.271 19.086 0 0.282 0.162 0.457 0.487 0.457 0.849v4.651z"#}
-        {#                  ></path>#}
-        {#                  <path#}
-        {#                    d="M19.502 4.047c0.166-0.017 0.33-0.047 0.498-0.047 2.757 0 5 2.243 5 5s-2.243 5-5 5c-0.168 0-0.332-0.030-0.498-0.047-0.424 0.641-0.944 1.204-1.513 1.716 0.651 0.201 1.323 0.331 2.011 0.331 3.859 0 7-3.141 7-7s-3.141-7-7-7c-0.688 0-1.36 0.131-2.011 0.331 0.57 0.512 1.089 1.075 1.513 1.716z"#}
-        {#                  ></path>#}
-        {#                  <path#}
-        {#                    d="M12 16c3.859 0 7-3.141 7-7s-3.141-7-7-7c-3.859 0-7 3.141-7 7s3.141 7 7 7zM12 4c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5c0-2.757 2.243-5 5-5z"#}
-        {#                  ></path>#}
-        {#                </svg>#}
-        {#                {{lobby.participants.all.count}} Joined#}
-        {#              </a>#}
-        {#              <p class="roomListRoom__topic">{{lobby.topic.name}}</p>#}
-        {#            </div>#}
-        {#          </div>#}
-        {##}
-        {#{% endfor %}#}
+
 
         {% for order in orders %}
 
             <tr>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
-                    {#                      <a href="{% url 'user-profile' lobby.host.id%}" class="roomListRoom__author">#}
-                    {#                      <a href="{% url 'order-list' %}" class="roomListRoom__author">#}
-                    {#                        <div class="avatar avatar--small">#}
-                    {#                          <img src="{{lobby.host.avatar.url}}" />#}
-                    {#                        </div>#}
-                    <span>{{ order.order_id }}</span>
-                    {#                      </a>#}
-                    {#                      <div class="roomListRoom__actions">#}
-                    {#                        <span>{{lobby.created|timesince}} ago</span>#}
-                    {#                      </div>#}
-                    {#                </div>#}
+
+                    <span><a href="update_order/{{ order.id }}" id="order_details">{{ order.order_id }}</a></span>
+
                 </td>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
                     {{ order.product.product_name }}
-                    {#                </div>#}
                 </td>
 
+
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
-                    {#                    <a href="{% url 'order-list' %}" class="roomListRoom__joined">#}
-                    {#                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">#}
-                    {#                          <title>user-group</title>#}
-                    {#                          <path#}
-                    {#                            d="M30.539 20.766c-2.69-1.547-5.75-2.427-8.92-2.662 0.649 0.291 1.303 0.575 1.918 0.928 0.715 0.412 1.288 1.005 1.71 1.694 1.507 0.419 2.956 1.003 4.298 1.774 0.281 0.162 0.456 0.487 0.456 0.85v4.65h-4v2h5c0.553 0 1-0.447 1-1v-5.65c0-1.077-0.56-2.067-1.461-2.584z"#}
-                    {#                          ></path>#}
-                    {#                          <path#}
-                    {#                            d="M22.539 20.766c-6.295-3.619-14.783-3.619-21.078 0-0.901 0.519-1.461 1.508-1.461 2.584v5.65c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-5.651c0-1.075-0.56-2.064-1.461-2.583zM22 28h-20v-4.65c0-0.362 0.175-0.688 0.457-0.85 5.691-3.271 13.394-3.271 19.086 0 0.282 0.162 0.457 0.487 0.457 0.849v4.651z"#}
-                    {#                          ></path>#}
-                    {#                          <path#}
-                    {#                            d="M19.502 4.047c0.166-0.017 0.33-0.047 0.498-0.047 2.757 0 5 2.243 5 5s-2.243 5-5 5c-0.168 0-0.332-0.030-0.498-0.047-0.424 0.641-0.944 1.204-1.513 1.716 0.651 0.201 1.323 0.331 2.011 0.331 3.859 0 7-3.141 7-7s-3.141-7-7-7c-0.688 0-1.36 0.131-2.011 0.331 0.57 0.512 1.089 1.075 1.513 1.716z"#}
-                    {#                          ></path>#}
-                    {#                          <path#}
-                    {#                            d="M12 16c3.859 0 7-3.141 7-7s-3.141-7-7-7c-3.859 0-7 3.141-7 7s3.141 7 7 7zM12 4c2.757 0 5 2.243 5 5s-2.243 5-5 5-5-2.243-5-5c0-2.757 2.243-5 5-5z"#}
-                    {#                          ></path>#}
-                    {#                        </svg>#}
-                    {{ order.product.product_details }}
-                    {#                    </a>#}
-                    {#                      <p class="roomListRoom__topic">{{lobby.topic.name}}</p>#}
-                    {#                </div>#}
-                </td>
-                <td>
-                    {#                <div class="roomListRoom__meta">#}
                     <span>{{ order.product.product_id }}</span>
-                    {#                </div>#}
                 </td>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
                     <span>{{ order.quantity }}</span>
-                    {#                </div>#}
                 </td>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
                     <span>{{ order.customer_name }}</span>
-                    {#                </div>#}
                 </td>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
                     <span>{{ order.customer_contactnumber }}</span>
-                    {#                </div>#}
                 </td>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
+                    <span>{{ order.customer_email }}</span>
+                </td>
+                <td>
                     <span>{{ order.customer_address }}</span>
-                    {#                </div>#}
                 </td>
                 <td>
-                    {#                <div class="roomListRoom__meta">#}
+                    <span>{{ order.delivery_address }}</span>
+                </td>
+                <td>
                     <span>{{ order.total_price }}</span>
-                    {#                </div>#}
                 </td>
                 <td>
-                    {% if order.status == 1 %}
-                        <button class="action-btn" onclick="openForm({{ order.id }})"><img
-                                src="https://img.icons8.com/external-itim2101-lineal-itim2101/40/ffffff/external-deliveryman-logistics-itim2101-lineal-itim2101-1.png"/>
-                        </button>
-                    {% elif order.status == 2 %}
-                        <button class="action-btn"><img
-                                src="https://img.icons8.com/external-xnimrodx-blue-xnimrodx/40/ffffff/external-box-e-commerce-and-business-xnimrodx-blue-xnimrodx-5.png"/>
-                        </button>
-                    {% endif %}
+                    <button class="action-btn" onclick="openForm({{ order.id }})"> {{ order.status }}
+                    </button>
+                    {#                    {% if order.status == 1 %}#}
+                    {#                        <button class="action-btn" onclick="openForm({{ order.id }})"><img#}
+                    {#                                src="https://img.icons8.com/external-itim2101-lineal-itim2101/40/ffffff/external-deliveryman-logistics-itim2101-lineal-itim2101-1.png"/>#}
+                    {#                        </button>#}
+                    {#                    {% elif order.status == 2 %}#}
+                    {#                        <button class="action-btn"><img#}
+                    {#                                src="https://img.icons8.com/external-xnimrodx-blue-xnimrodx/40/ffffff/external-box-e-commerce-and-business-xnimrodx-blue-xnimrodx-5.png"/>#}
+                    {#                        </button>#}
+                    {#                    {% endif %}#}
                 </td>
             </tr>
 
@@ -278,25 +216,34 @@
         {% endfor %}
     </table>
     <div class="form-popup" id="myForm">
-        <form action="" class="form-container" method="POST">
+        <form action="" class="form-container" method="POST" autocomplete="off">
             {% csrf_token %}
             {#            <h1>Update Availability</h1>#}
 
-            <label for="available"><b>Order Delivered?</b></label>
-            {#            <input type="select" list="available" placeholder="Select Availability" name="available">#}
-            {#            <datalist id="available" name="available">#}
-            {#                                <option value="">Select Availability</option>#}
-            {#                <option value="Yes">#}
-            {#                <option value="No">#}
-            {#            </datalist>#}
+            <label for="available"><b style="font-size: 20px; margin-left: 20%">Order Status Update</b></label>
+            <input type="search" list="available" placeholder="Select Status" name="available" style="background: #eabaaf;
+  border: 1px solid var(--color-dark-light);
+  padding: 1rem;
+  border-radius: 3px;
+  width: 100%;
+  color: var(--color-light);
+  font-weight: 500;
+  outline: none;">
+            <datalist id="available" name="available">
+                <option value="PENDING">
+                <option value="SHIPPING">
+                <option value="ON HAND">
+                <option value="DELIVERING">
+                <option value="DELIVERED">
+            </datalist>
 
             <input id="order_id" type="hidden" name="order_id">
 
             {#            <label for="psw"><b>Password</b></label>#}
             {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
             <div>
-                <button type="submit" class="btn">Yes</button>
-                <button type="button" class="btn cancel" onclick="closeForm()">No</button>
+                <button type="submit" class="btn">Submit</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Cancel</button>
             </div>
         </form>
     </div>

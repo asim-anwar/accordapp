@@ -1,33 +1,138 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    {#    <script>#}
-    {#                    $(function () {#}
-    {#                        $("id_product").select2();#}
-    {#                    });#}
-    {#                </script>#}
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffcfa5;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #565656;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: black;
+        }
+
+        .layout__box {
+            width: 90%;
+            max-width: 48rem;
+            min-height: 40rem;
+            max-height: 80rem;
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -46%);
+            background-color: var(--color-dark);
+            border-radius: 1rem;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .layout__body {
+            min-height: 40rem;
+            max-height: 65rem;
+            margin: 3rem;
+            overflow: auto;
+        }
+
+        .form__group {
+            margin-bottom: 2rem;
+            margin-right: 10px;
+            width: 98%;
+        }
+
+        .form {
+            animation: fadeEffect 1s; /* Fading effect takes 1 second */
+        }
+
+        /* Go from zero to full opacity */
+        @keyframes fadeEffect {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .tablinks {
+            color: #ffcfa5;
+            font-size: 15px;
+            font-weight: normal;
+            padding: 5px;
+            background: transparent;
+            border: none
+        }
+
+        .active {
+            color: #ffcfa5;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 7px;
+            background: transparent;
+            border: none
+        }
+
+        .alert {
+            padding: 10px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+            margin-top: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
+    </style>
     <script>
-        $(function () {
-            $("id_product").select2();
-        });
-        $(document).ready(function () {
 
-            // Initialize select2
-            $("#selUser").select2();
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
 
-            // Read selected option
-            $('#but_read').click(function () {
-                var username = $('#selUser option:selected').text();
-                var userid = $('#selUser').val();
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("form");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
 
-                $('#result').html("id : " + userid + ", name : " + username);
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
 
-            });
-        });
-        $(".jSelectbox").select2({
-            containerCssClass: "error",
-            dropdownCssClass: "js-example-basic-single"
-        });
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+        }
+
     </script>
     <main class="create-room layout">
         <div class="container">
@@ -48,67 +153,169 @@
                 </div>
 
                 <div class="layout__body">
-                    <form class="form" action="" method="POST">
+                    {% if error %}
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <div class="tab">
+                        <table style="margin-bottom: 5px">
+                            <th style="border-bottom: 3px solid #ffcfa5; border-right: 3px solid #ffcfa5">
+                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open">Jersey</button>
+                            </th>
+                            <th style="border-bottom: 3px solid #ffcfa5; border-right: 3px solid #ffcfa5">
+                                <button class="tablinks" onclick="openCity(event, 'others')">Others</button>
+                            </th>
+
+                        </table>
+
+                    </div>
+                    <form id="jersey" class="form" action="" method="POST" autocomplete="off">
                         {% csrf_token %}
 
                         <div class="form__group">
                             <label>Customer Name</label>
                             {{ form.customer_name }}
-                            {#              <input required type="text" value="{{lobby.topic.name}}" name="topic" list="topic-list">#}
-                            {#              <datalist id="topic-list">#}
-                            {#                <select id="lobby-topic">#}
-                            {#                  {% for topic in topics %}#}
-                            {#                  <option value="{{topic.name}}">{{topic.name}}</option>#}
-                            {#                  {% endfor %}#}
-                            {#                </select>#}
-
-                            {#              </datalist>#}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
                         </div>
                         <div class="form__group">
                             <label>Customer Mobile</label>
                             {{ form.customer_contactnumber }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Email</label>
+                            {{ form.customer_email }}
                         </div>
                         <div class="form__group">
                             <label>Customer Address</label>
                             {{ form.customer_address }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                        </div>
+                        <div class="form__group">
+                            <label>Delivery Address</label>
+                            {{ form.delivery_address }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Facebook</label>
+                            {{ form.customer_fb }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Discord</label>
+                            {{ form.customer_discord }}
                         </div>
                         <div class="form__group">
                             <label>Product ID</label>
                             {#                            {{ form.product }}#}
                             <input list="product" placeholder="Select Product" name='product'>
-                                <datalist name="product" id="product">
-{#                                <option value="">Select Product</option>#}
-                                    {% for p in product_id %}
-                                        <option value="{{ p.product_id }}">
-                                    {% endfor %}
-                                </datalist>
-
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                            <datalist name="product" id="product">
+                                {#                                <option value="">Select Product</option>#}
+                                {% for p in product_id %}
+                                    <option value="{{ p.product_id }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <div class="form__group">
+                            <label>Size</label>
+                            {{ form.size }}
+                        </div>
+                        <div class="form__group">
+                            <label>Custom Name</label>
+                            {{ form.custom_name }}
+                        </div>
+                        <div class="form__group">
+                            <label>Custom Number</label>
+                            {{ form.custom_number }}
                         </div>
                         <div class="form__group">
                             <label>Quantity</label>
                             {{ form.quantity }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                        </div>
+                        <div class="form__group">
+                            <label>Paid Amount</label>
+                            {{ form.paid }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid To</label>
+                            {{ form.money_received_by }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash No</label>
+                            {{ form.bkash_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash TXN ID</label>
+                            {{ form.bkash_txn_id }}
                         </div>
 
-                        <!--            <div class="form__group">-->
-                        <!--              <label for="room_topic">Topic</label>-->
-                        <!--              <input required type="text" name="topic" id="room_topic" list="topic-list" />-->
-                        <!--              <datalist id="topic-list">-->
-                        <!--                <select id="room_topic">-->
-                        <!--                  <option value="">Select your topic</option>-->
-                        <!--                  <option value="Python">Python</option>-->
-                        <!--                  <option value="Django">Django</option>-->
-                        <!--                </select>-->
-                        <!--              </datalist>-->
 
-                        <!--            </div>-->
+                        <div class="form__action" style="margin-right: 2%">
+                            <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
+                            <button class="btn btn--main" type="submit">Submit</button>
+                        </div>
+                    </form>
+
+                    <form id="others" class="form" action="" method="POST" autocomplete="off">
+                        {% csrf_token %}
+
+                        <div class="form__group">
+                            <label>Customer Name</label>
+                            {{ form.customer_name }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Mobile</label>
+                            {{ form.customer_contactnumber }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Email</label>
+                            {{ form.customer_email }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Address</label>
+                            {{ form.customer_address }}
+                        </div>
+                        <div class="form__group">
+                            <label>Delivery Address</label>
+                            {{ form.delivery_address }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Facebook</label>
+                            {{ form.customer_fb }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Discord</label>
+                            {{ form.customer_discord }}
+                        </div>
+                        <div class="form__group">
+                            <label>Product ID</label>
+                            <input list="product" placeholder="Select Product" name='product'>
+                            <datalist name="product" id="product">
+                                {% for p in product_id %}
+                                    <option value="{{ p.product_id }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <div class="form__group">
+                            <label>Quantity</label>
+                            {{ form.quantity }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid Amount</label>
+                            {{ form.paid }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid To</label>
+                            {{ form.money_received_by }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash No</label>
+                            {{ form.bkash_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash TXN ID</label>
+                            {{ form.bkash_txn_id }}
+                        </div>
 
 
-                        <div class="form__action">
+                        <div class="form__action" style="margin-right: 2%">
                             <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
                             <button class="btn btn--main" type="submit">Submit</button>
                         </div>
@@ -116,5 +323,6 @@
                 </div>
             </div>
         </div>
+        <script>document.getElementById('open').click()</script>
     </main>
 {% endblock %}

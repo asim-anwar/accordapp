@@ -2,6 +2,34 @@
 
 {% block content %}
 
+    <style>
+        .alert {
+            padding: 10px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+            margin-top: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
+    </style>
+
     <main class="create-room layout">
         <div class="container">
             <div class="layout__box">
@@ -21,7 +49,13 @@
                 </div>
 
                 <div class="layout__body">
-                    <form class="form" action="" method="POST">
+                    {% if error %}
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <form class="form" action="" method="POST" autocomplete="off">
                         {% csrf_token %}
 
                         <div class="form__group">
@@ -50,19 +84,19 @@
                         </div>
                         <div class="form__group">
                             <label>Product Type</label>
-                            <input list="product_type" placeholder="Select Type" name='product_type'>
+                            <input type="search" list="product_type" placeholder="Select Type" name='product_type'>
                             <datalist id='product_type' name="product_type">
-{#                                <select>#}
-                                    {#                                <option value="">Select Type</option>#}
-                                    <option value="Figurines">
-                                    <option value="Keychains">
-                                    <option value="Keycaps">
-                                    <option value="Headphone Pouch">
-                                    <option value="Mousepads">
-                                    <option value="Swords">
-                                    <option value="Clothing">
-                                    <option value="Heirloom">
-{#                                </select>#}
+                                {#                                <select>#}
+                                {#                                <option value="">Select Type</option>#}
+                                <option value="Figurines">
+                                <option value="Keychains">
+                                <option value="Keycaps">
+                                <option value="Headphone Pouch">
+                                <option value="Mousepads">
+                                <option value="Swords">
+                                <option value="Clothing">
+                                <option value="Heirloom">
+                                    {#                                </select>#}
                             </datalist>
                             {#                                                        {{ form.product }}#}
                             {#                            <button onclick="myFunction()" class="dropbtn"></button>#}
@@ -83,7 +117,7 @@
                         </div>
                         <div class="form__group">
                             <label>Availability</label>
-                            <input list="available" placeholder="Select Availability">
+                            <input type="search" list="available" placeholder="Select Availability">
                             <datalist id="available" name="available">
                                 {#                                <option value="">Select Availability</option>#}
                                 <option value="Yes">

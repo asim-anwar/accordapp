@@ -28,7 +28,17 @@ class UserForm(ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        fields = '__all__'
+        exclude = ['created_by', 'created_date']
+
+
+class OrderFormPOST(forms.ModelForm):
+    class Meta:
+        model = Order
+        # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        fields = '__all__'
+        exclude = ['created_by', 'created_date', 'product', 'order_id']
 
 
 class ProductForm(ModelForm):

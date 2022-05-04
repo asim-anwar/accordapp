@@ -13,8 +13,10 @@ urlpatterns = [
     path('user_profile/<str:pk>', views.user_profile, name='user-profile'),
     path('order_list', views.order_list, name='order-list'),
     path('update_user/', views.update_user, name="update-user"),
+    path('update_order/<str:pk>', views.update_order, name="update-order"),
 
     path('topics/', views.topics, name='topics'),
+    path('pages/', views.pages, name='pages'),
     path('activity/', views.activity, name='activity'),
     path('create_lobby/', views.create_lobby, name='create-lobby'),
     path('create_order/', views.create_order, name='create-order'),

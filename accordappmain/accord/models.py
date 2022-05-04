@@ -54,6 +54,7 @@ class Post(models.Model):
 
 class Pages(models.Model):
     page_name = models.CharField(max_length=100, null=True, blank=True)
+    url = models.CharField(max_length=200, null=True, blank=True)
 
 
 class Product(models.Model):
@@ -71,15 +72,27 @@ class Product(models.Model):
 
 class Order(models.Model):
     order_id = models.CharField(max_length=200, null=True, blank=True)
-    # product_name = models.CharField(max_length=200, null=True, blank=True)
-    # product_details = models.TextField(null=True, blank=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
-    customer_name = models.CharField(max_length=200, null=True, blank=True)
-    customer_contactnumber = models.CharField(max_length=200, null=True, blank=True)
-    customer_address = models.TextField(null=True, blank=True)
-    quantity = models.IntegerField(null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=False, related_name='product')
+
+    customer_name = models.CharField(max_length=200, null=True, blank=False)
+    customer_contactnumber = models.CharField(max_length=200, null=True, blank=False)
+    customer_email = models.CharField(max_length=200, null=True, blank=True)
+    customer_address = models.TextField(null=True, blank=False)
+    delivery_address = models.TextField(null=True, blank=False)
+    customer_fb = models.CharField(max_length=200, null=True, blank=True)
+    customer_discord = models.CharField(max_length=200, null=True, blank=True)
+
+    quantity = models.IntegerField(null=True, blank=False)
+    size = models.CharField(max_length=200, null=True, blank=True)
+    custom_name = models.CharField(max_length=200, null=True, blank=True)
+    custom_number = models.CharField(max_length=20, null=True, blank=True)
     total_price = models.IntegerField(null=True, blank=True)
-    status = models.IntegerField(null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True, default='PENDING')
+    paid = models.IntegerField(null=True, blank=False)
+    money_received_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='received_by')
+
+    bkash_number = models.CharField(max_length=200, null=True, blank=False)
+    bkash_txn_id = models.CharField(max_length=200, null=True, blank=True)
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='order')
     created_date = models.DateTimeField(null=True, blank=True)

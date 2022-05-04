@@ -87,7 +87,7 @@ def home(request):
         order = Order.objects.get(id=request.POST.get('order_id'))
         # available = request.POST.get('available')
         # print(product, available)
-        order.status = 2
+        order.status = request.POST.get('available')
         order.save()
 
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -204,8 +204,16 @@ def user_profile(request, pk):
     lobbys = user.lobby_set.all()
     posts = user.post_set.all()
     topics = Topic.objects.all
+    pages = Pages.objects.all()
+    products = Product.objects.all()
+    orders = Order.objects.all()
+    if request.user.id == 1:
+        tasks = Tasks.objects.all()
+    else:
+        tasks = Tasks.objects.filter(assigned_to=request.user)
 
-    context = {'page': page, 'user': user, 'lobbys': lobbys, 'posts': posts, 'topics': topics}
+    context = {'page': page, 'user': user, 'lobbys': lobbys, 'posts': posts, 'topics': topics, 'pages': pages,
+               'products': products, 'tasks': tasks, 'orders': orders}
     return render(request, 'accord/user_profile.html', context)
 
 
@@ -255,33 +263,27 @@ def create_order(request):
     product_id = Product.objects.all()
     # topics = Topic.objects.all()
 
-    if request.method == 'POST':
-        Price = Product.objects.get(product_id=request.POST.get('product')).price
-        product_id = Product.objects.get(product_id=request.POST.get('product')).id
-        quantity = request.POST.get('quantity')
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            order.created_by = request.user
-            order.created_date = datetime.datetime.now()
-            order.order_id = 'OD' + str(random.randint(100000, 999999))
-            order.total_price = int(Price) * int(quantity)
-            order.product_id = product_id
-            order.save()
-        else:
-            error = form.errors
-            print(error)
+    try:
+        if request.method == 'POST':
+            Price = Product.objects.get(product_id=request.POST.get('product')).price
+            product_id = Product.objects.get(product_id=request.POST.get('product')).id
+            quantity = request.POST.get('quantity')
+            form = OrderForm(request.POST)
+            if form.is_valid():
+                order = form.save(commit=False)
+                order.created_by = request.user
+                order.created_date = datetime.datetime.now()
+                order.order_id = 'OD' + str(random.randint(100000, 999999))
+                order.total_price = int(Price) * int(quantity)
+                order.product_id = product_id
+                order.save()
+                return redirect('home')
+            else:
+                error = form.errors
 
-        # Order.objects.create(
-        #     customer_name=request.POST.get('customer_name'),
-        #     customer_contactnumber=request.POST.get('customer_contactnumber'),
-        #     customer_address=request.POST.get('customer_address'),
-        #     product_id=request.POST.get('product'),
-        #     order_id='OD'+str(random.randint(100000, 999999)),
-        #     quantity=request.POST.get('quantity'),
-        #     total_price=int(Price)*int(quantity)
-        # )
-        return redirect('home')
+    except Exception as e:
+        error = str(e)
+
 
     context = {'page': page, 'form': form, 'error': error, 'product_id': product_id}
     return render(request, 'accord/create_update_order.html', context)
@@ -428,11 +430,39 @@ def update_user(request):
     return render(request, 'accord/update-user.html', context)
 
 
+@login_required(login_url='login')
+def update_order(request, pk):
+    page = 'update-order'
+    order = Order.objects.get(id=pk)
+    form = OrderForm(instance=order)
+
+    if request.method == 'POST':
+        form = OrderFormPOST(request.POST, instance=order)
+        if form.is_valid():
+            order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
+            order.save()
+            form.save()
+
+            return redirect('home')
+    products = Product.objects.all()
+    order = Order.objects.get(id=pk)
+
+    context = {'page': page, 'form': form, 'products': products, 'order': order}
+    return render(request, 'accord/update-order.html', context)
+
+
 def topics(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     topics = Topic.objects.filter(name__icontains=q)
     return render(request, 'accord/topics.html', {'topics': topics})
+
+
+def pages(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+
+    pages = Pages.objects.filter(page_name__icontains=q)
+    return render(request, 'accord/pages.html', {'pages': pages})
 
 
 def activity(request):
