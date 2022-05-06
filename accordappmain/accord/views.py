@@ -85,7 +85,6 @@ def home(request):
 
     if request.method == 'POST':
         order = Order.objects.get(id=request.POST.get('order_id'))
-        # available = request.POST.get('available')
         # print(product, available)
         order.status = request.POST.get('available')
         order.save()
@@ -99,7 +98,8 @@ def home(request):
             Q(product__product_name__icontains=q) |
             Q(customer_contactnumber__contains=q) |
             Q(order_id__contains=q) |
-            Q(product__product_id__contains=q))
+            Q(product__product_id__contains=q) |
+            Q(status__icontains=q))
 
     products = Product.objects.all()
     pages = Pages.objects.all()
@@ -260,7 +260,7 @@ def create_order(request):
     page = 'create-order'
     form = OrderForm()
     error = ''
-    product_id = Product.objects.all()
+    products = Product.objects.all()
     # topics = Topic.objects.all()
 
     try:
@@ -268,7 +268,7 @@ def create_order(request):
             Price = Product.objects.get(product_id=request.POST.get('product')).price
             product_id = Product.objects.get(product_id=request.POST.get('product')).id
             quantity = request.POST.get('quantity')
-            form = OrderForm(request.POST)
+            form = OrderFormPOST(request.POST)
             if form.is_valid():
                 order = form.save(commit=False)
                 order.created_by = request.user
@@ -284,8 +284,7 @@ def create_order(request):
     except Exception as e:
         error = str(e)
 
-
-    context = {'page': page, 'form': form, 'error': error, 'product_id': product_id}
+    context = {'page': page, 'form': form, 'error': error, 'products': products}
     return render(request, 'accord/create_update_order.html', context)
 
 
@@ -309,6 +308,7 @@ def create_product(request):
             product.product_type = ptype
             product.preorder = int(request.POST.get('price')) * (30 / 100)
             product.product_id = pshort + str(random.randint(100000, 999999))
+            product.available = request.POST.get('available')
             product.save()
         else:
             error = form.errors
@@ -439,7 +439,8 @@ def update_order(request, pk):
     if request.method == 'POST':
         form = OrderFormPOST(request.POST, instance=order)
         if form.is_valid():
-            order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
+            if request.POST.get('product') != '':
+                order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
             order.save()
             form.save()
 

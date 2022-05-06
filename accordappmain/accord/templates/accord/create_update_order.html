@@ -208,7 +208,7 @@
                             <input list="product" placeholder="Select Product" name='product'>
                             <datalist name="product" id="product">
                                 {#                                <option value="">Select Product</option>#}
-                                {% for p in product_id %}
+                                {% for p in products %}
                                     <option value="{{ p.product_id }}">
                                 {% endfor %}
                             </datalist>
@@ -288,7 +288,7 @@
                             <label>Product ID</label>
                             <input list="product" placeholder="Select Product" name='product'>
                             <datalist name="product" id="product">
-                                {% for p in product_id %}
+                                {% for p in products %}
                                     <option value="{{ p.product_id }}">
                                 {% endfor %}
                             </datalist>
