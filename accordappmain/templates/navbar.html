@@ -29,14 +29,23 @@
         gap: 1.5rem;
         border-radius: 4px;
     }
+
+    .header__logo{
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        margin-top: -50px;
+        margin-bottom: -50px;
+    }
 </style>
 <header class="header header--loggedIn">
     <div class="container">
         <a href="{% url 'home' %}" class="header__logo">
             {#            <img src="{% static 'images/seikai_logo.png' %}"/>#}
-            <img style="image-rendering: high-quality; width: 200px; height: 100px"
-                 src="{% static 'images/NavLogo2.png' %}"/>
-            {#          <h1>AccorD</h1>#}
+            {#            <img style="image-rendering: high-quality; width: 200px; height: 100px"#}
+            {#                 src="{% static 'images/NavLogo2.png' %}"/>#}
+            <h1 style="font-weight: 300; font-size: 100px; font-family: BillyanaPersonalUseOnly; color: #ffcfa5">
+                seikai</h1>
             {#          <h1 style="font-family: billiyana; color: #ed6a4c">Seikai</h1>#}
         </a>
         {% if page == 'home' or page == 'products' or page == 'tasks' %}
