@@ -100,15 +100,11 @@
         opacity: 1;
     }
 
+
     td {
-        border-right: 1px solid black;
-        height: auto;
-        width: auto;
-        text-align: center;
-        vertical-align: center;
-        border-bottom: 1px solid #fc4b0b;
-    {#padding-top: 1rem;#} padding: 0.8rem;
-        border-radius: 5px;
+    {#border-right: 1px solid black;#} text-align: center;
+    {#    vertical-align: center;#}{#    border-bottom: 1px solid #fc4b0b;#}{#padding-top: 1rem;#} padding: 0.8rem;
+    {#    border-radius: 5px;#}
     }
 
     tr {
@@ -119,34 +115,35 @@
     }
 
     th {
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-        border-bottom: 1px solid black;
-        border-radius: 5px;
+    {#border-left: 1px solid black;#}{#border-right: 1px solid black;#}{#border-bottom: 1px solid black;#} border-radius: 5px;
         padding: 0.5rem;
         width: auto;
         color: white;
         position: sticky;
         top: 0;
+        text-align: center;
     {#background-color: #fc4b0b;#} background-color: #ED6A4C;
     }
 
     #order_details {
         color: #fc4b0b;
+        font-weight: bold;
     }
 
     #order_details:hover {
         color: crimson;
-        font-weight: bold;
+    {#font-weight: bold;#}
     }
 
+
 </style>
-<div style="max-height:700px;min-height:80px;overflow:auto;border: 3px solid black; border-radius: 10px; max-width: 100%">
-    <table style="width:100%; border-radius: 10px; background-color: #ffe1db">
+<div class="col-lg-pull-12 table-orders"
+     style="max-height:650px;min-height:80px;overflow:auto;border: 2px solid black; border-radius: 10px; background-color: #ffe1db">
+    <table class="table-hover table-bordered" style="background-color: #ffe1db">
         <tr>
             <th>Order ID</th>
             <th>Product Name</th>
-{#            <th>Product Details</th>#}
+            {#            <th>Product Details</th>#}
             <th>Product ID</th>
             <th>Quantity</th>
             <th>Customer Name</th>
@@ -197,54 +194,24 @@
                 <td>
                     <span>{{ order.total_price }}</span>
                 </td>
+
                 <td>
-                    <button class="action-btn" onclick="openForm({{ order.id }})"> {{ order.status }}
+                    <button type="button" class="btn btn-primary passingID" data-toggle="modal" data-target="#myModal" id="{{ order.id }}">
+                        {{ order.status }}
                     </button>
-                    {#                    {% if order.status == 1 %}#}
-                    {#                        <button class="action-btn" onclick="openForm({{ order.id }})"><img#}
-                    {#                                src="https://img.icons8.com/external-itim2101-lineal-itim2101/40/ffffff/external-deliveryman-logistics-itim2101-lineal-itim2101-1.png"/>#}
-                    {#                        </button>#}
-                    {#                    {% elif order.status == 2 %}#}
-                    {#                        <button class="action-btn"><img#}
-                    {#                                src="https://img.icons8.com/external-xnimrodx-blue-xnimrodx/40/ffffff/external-box-e-commerce-and-business-xnimrodx-blue-xnimrodx-5.png"/>#}
-                    {#                        </button>#}
-                    {#                    {% endif %}#}
                 </td>
             </tr>
 
 
         {% endfor %}
     </table>
-    <div class="form-popup" id="myForm">
-        <form action="" class="form-container" method="POST" autocomplete="off">
-            {% csrf_token %}
-            {#            <h1>Update Availability</h1>#}
 
-            <label for="available"><b style="font-size: 20px; margin-left: 20%">Order Status Update</b></label>
-            <input type="search" list="available" placeholder="Select Status" name="available" style="background: #eabaaf;
-  border: 1px solid var(--color-dark-light);
-  padding: 1rem;
-  border-radius: 3px;
-  width: 100%;
-  color: var(--color-light);
-  font-weight: 500;
-  outline: none;">
-            <datalist id="available" name="available">
-                <option value="PENDING">
-                <option value="SHIPPING">
-                <option value="ON HAND">
-                <option value="DELIVERING">
-                <option value="DELIVERED">
-            </datalist>
+    <script>
+        $(document).on("click", ".passingID", function () {
+     var ids = $(this).attr('id');
+     $(".modal-body #order_id").val( ids );
+    });
+    </script>
 
-            <input id="order_id" type="hidden" name="order_id">
-
-            {#            <label for="psw"><b>Password</b></label>#}
-            {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
-            <div>
-                <button type="submit" class="btn">Submit</button>
-                <button type="button" class="btn cancel" onclick="closeForm()">Cancel</button>
-            </div>
-        </form>
-    </div>
 </div>
+

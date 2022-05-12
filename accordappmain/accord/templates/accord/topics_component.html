@@ -1,36 +1,76 @@
+<style>
+    .pages {
+        font-size: 20px;
+        font-weight: bold;
+        color: #ed6a4c;
+    }
+
+    .pagelist {
+        color: #565656;
+        margin-left: -15px;
+    }
+    .badge {
+        background-color: #ed6a4c;
+        font-size: 17px;
+    }
+
+    li.borderless {
+        border: none;
+    }
+
+    .pagelink {
+        color: #565656;
+        padding-left: -5px;
+    }
+    .pagelink:hover {
+        color: #ed6a4c;
+        text-decoration: none;
+    }
+
+    a:hover{
+        text-decoration: none;
+        color: #ffcfa5;
+    }
+    .active{
+        color: #ed6a4c;
+        text-decoration: none;
+        padding-left: 5px;
+    }
+</style>
+
 <div class="topics">
     <div class="topics__header">
         <h2>Pages</h2>
     </div>
-    <ul class="topics__list">
+    <ul class="list-group pagelist" >
         {#        <li>#}
         {#            <a href="{% url 'home' %}" class="active">Orders <span>{{ orders.count }}</span></a>#}
         {#        </li>#}
         {% for p in pages %}
-            <li>
+            <li class="list-group-item borderless pages">
                 {% if p.id == 1 %}
                     {% if page == 'home' %}
-                        <a href="{% url 'home' %}" class="active">{{ p.page_name }}
+                        <a href="{% url 'home' %}" class="active">{{ p.page_name }}</a>
                     {% else %}
-                        <a href="{% url 'home' %}">{{ p.page_name }}
+                        <a href="{% url 'home' %}" class="pagelink">{{ p.page_name }}</a>
                     {% endif %}
-                    <span>{{ orders.count }}</span>
+                    <span class="badge">{{ orders.count }}</span>
                 {% elif p.id == 2 %}
                     {% if page == 'products' %}
-                        <a href="{% url 'products' %}" class="active">{{ p.page_name }}
+                        <a href="{% url 'products' %}" class="active">{{ p.page_name }}</a>
                     {% else %}
-                        <a href="{% url 'products' %}">{{ p.page_name }}
+                        <a href="{% url 'products' %}" class="pagelink">{{ p.page_name }}</a>
                     {% endif %}
-                    <span>{{ products.count }}</span>
+                    <span class="badge">{{ products.count }}</span>
                 {% elif p.id == 3 %}
                     {% if page == 'tasks' %}
-                        <a href="{% url 'tasks' %}" class="active">{{ p.page_name }}
+                        <a href="{% url 'tasks' %}" class="active">{{ p.page_name }}</a>
                     {% else %}
-                        <a href="{% url 'tasks' %}">{{ p.page_name }}
+                        <a href="{% url 'tasks' %}" class="pagelink">{{ p.page_name }}</a>
                     {% endif %}
-                    <span>{{ tasks.count }}</span>
+                    <span class="badge">{{ tasks.count }}</span>
                 {% endif %}
-                </a>
+
             </li>
         {% endfor %}
     </ul>

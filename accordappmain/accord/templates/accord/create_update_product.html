@@ -28,11 +28,19 @@
         .closebtn:hover {
             color: black;
         }
+
+        .layout__box {
+        {#position: absolute;#}{#transform: translate(-50%, -46%);#} margin-top: 5rem;
+            background-color: var(--color-dark);
+            border-radius: 1rem;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
     </style>
 
-    <main class="create-room layout">
+
         <div class="container">
-            <div class="layout__box">
+            <div class="col-lg-auto layout__box">
                 <div class="layout__boxHeader">
                     <div class="layout__boxTitle">
                         <a href="{% url 'products' %}">
@@ -149,5 +157,5 @@
                 </div>
             </div>
         </div>
-    </main>
+
 {% endblock %}

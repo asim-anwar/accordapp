@@ -23,19 +23,19 @@
             background: black;
         }
 
+        a:hover {
+            text-decoration: none;
+            color: #ffcfa5;
+        }
+
+
         .layout__box {
-            width: 90%;
-            max-width: 48rem;
-            min-height: 40rem;
-            max-height: 80rem;
-            position: absolute;
-            top: 52%;
-            left: 50%;
-            transform: translate(-50%, -46%);
+        {#position: absolute;#}{#transform: translate(-50%, -46%);#} margin-top: 5rem;
             background-color: var(--color-dark);
             border-radius: 1rem;
-            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            max-height: 730px;
         }
 
         .layout__body {
@@ -43,6 +43,7 @@
             max-height: 65rem;
             margin: 3rem;
             overflow: auto;
+            max-height: 600px;
         }
 
         .form__group {
@@ -74,13 +75,14 @@
             border: none
         }
 
-        .active {
+        .tablinks.active {
             color: #ffcfa5;
             font-size: 20px;
             font-weight: bold;
             padding: 7px;
             background: transparent;
-            border: none
+            border: none;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3)
         }
 
         .alert {
@@ -134,9 +136,10 @@
         }
 
     </script>
-    <main class="create-room layout">
-        <div class="container">
-            <div class="layout__box">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-pull-12 layout__box">
                 <div class="layout__boxHeader">
                     <div class="layout__boxTitle">
                         <a href="{% url 'home' %}">
@@ -161,10 +164,11 @@
                     {% endif %}
                     <div class="tab">
                         <table style="margin-bottom: 5px">
-                            <th style="border-bottom: 3px solid #ffcfa5; border-right: 3px solid #ffcfa5">
-                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open">Jersey</button>
+                            <th style="">
+                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open">Jersey
+                                </button>
                             </th>
-                            <th style="border-bottom: 3px solid #ffcfa5; border-right: 3px solid #ffcfa5">
+                            <th style="">
                                 <button class="tablinks" onclick="openCity(event, 'others')">Others</button>
                             </th>
 
@@ -205,7 +209,7 @@
                         <div class="form__group">
                             <label>Product ID</label>
                             {#                            {{ form.product }}#}
-                            <input list="product" placeholder="Select Product" name='product'>
+                            <input type="search" list="product" placeholder="Select Product" name='product'>
                             <datalist name="product" id="product">
                                 {#                                <option value="">Select Product</option>#}
                                 {% for p in products %}
@@ -323,6 +327,7 @@
                 </div>
             </div>
         </div>
-        <script>document.getElementById('open').click()</script>
-    </main>
+    </div>
+    <script>document.getElementById('open').click()</script>
+
 {% endblock %}
