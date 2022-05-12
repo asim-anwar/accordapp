@@ -347,7 +347,7 @@ def create_task(request):
             task.created_date = datetime.datetime.now()
             task.assign_date = datetime.datetime.now()
             task.assigned_to = User.objects.get(username=request.POST.get('assigned_to'))
-            # task.preorder = int(request.POST.get('price')) * (30 / 100)
+            task.status = 1
             task.task_id = 'TSK' + str(random.randint(10000, 99999))
             task.save()
         else:
