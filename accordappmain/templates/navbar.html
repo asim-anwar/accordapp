@@ -179,7 +179,10 @@
     <div class="container-fluid">
         <div class="col-lg-4">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{% url 'home' %}" style="color: #ffcfa5">seikai</a>
+                <a href="{% url 'home' %}">
+                    <img src={% static 'images/nav_LOGO.png' %}>
+                </a>
+                {#                <a class="navbar-brand" href="{% url 'home' %}" style="color: #ffcfa5">seikai</a>#}
             </div>
         </div>
         <div class="col-lg-6">
