@@ -164,8 +164,8 @@ def tasks(request):
 
     if q != '':
         tasks = tasks.filter(
-            Q(completed_by__icontains=q) |
-            Q(assigned_to__icontains=q) |
+            Q(completed_by_id__username__icontains=q) |
+            Q(assigned_to_id__username__icontains=q) |
             Q(task_id__contains=q)
         )
     # topics = Topic.objects.all()[0:6]
