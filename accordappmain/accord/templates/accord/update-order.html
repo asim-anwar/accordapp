@@ -57,11 +57,12 @@
                                     <label style="font-size: 20px; font-weight: bold; color: #ffcfa5">{{ field.label }}: {{ field.value }}</label>
                                 {% elif field.label == 'Product' %}
                                     <label>{{ field.label }}</label>
-                                    <input type="search" list="product" placeholder="{{ order.product.product_id }}" name='product' autocomplete="off">
-                                    <datalist name="product" id="product">
-                                        {% for p in products %}
-                                            <option value="{{ p.product_id }}">
-                                        {% endfor %}
+                                    <input type="search" list="product" placeholder="{{ order.product.product_id }}"
+                                           name='product' autocomplete="off" onfocus="this.value=''" onchange="this.blur();">
+                                    <datalist name=" product" id="product">
+                                    {% for p in products %}
+                                        <option value="{{ p.product_id }}">
+                                    {% endfor %}
                                     </datalist>
                                 {% else %}
                                     <label>{{ field.label }}</label>

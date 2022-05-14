@@ -209,7 +209,7 @@
                         <div class="form__group">
                             <label>Product ID</label>
                             {#                            {{ form.product }}#}
-                            <input type="search" list="product" placeholder="Select Product" name='product'>
+                            <input type="search" list="product" placeholder="Select Product" name='product' onfocus="this.value=''" onchange="this.blur();">
                             <datalist name="product" id="product">
                                 {#                                <option value="">Select Product</option>#}
                                 {% for p in products %}
@@ -290,7 +290,7 @@
                         </div>
                         <div class="form__group">
                             <label>Product ID</label>
-                            <input list="product" placeholder="Select Product" name='product'>
+                            <input list="product" placeholder="Select Product" name='product' onfocus="this.value=''" onchange="this.blur();">
                             <datalist name="product" id="product">
                                 {% for p in products %}
                                     <option value="{{ p.product_id }}">

@@ -77,7 +77,8 @@
                 <div class="roomList">
                     <div class="mobile-menu">
                         <div class="mobile-menuItems">
-                            <a class="btn btn--main btn--pill" href='http://103.139.235.239:3000/pages/'>Browse Pages</a>
+                            <a class="btn btn--main btn--pill" href='http://103.139.235.239:3000/pages/'>Browse
+                                Pages</a>
                         </div>
                     </div>
                     <div class="roomList__header">
@@ -121,7 +122,8 @@
                         {% csrf_token %}
                         {#            <h1>Update Availability</h1>#}
 
-                        <input required type="search" id="options" list="available" placeholder="Select Status..." name="available"
+                        <input required type="search" id="options" list="available" placeholder="Select Status..."
+                               name="available"
                                onfocus="this.value=''" onchange="this.blur();" style="background: #eabaaf;
   border: 1px solid var(--color-dark-light);
   padding: 1rem;
@@ -132,11 +134,11 @@
   font-weight: 500;
   outline: none;">
                         <datalist id="available" name="available">
-                            <option value="PENDING">
-                            <option value="SHIPPING">
-                            <option value="ON HAND">
-                            <option value="DELIVERING">
-                            <option value="DELIVERED">
+                            <option class="option" value="PENDING">
+                            <option class="option" value="SHIPPING">
+                            <option class="option" value="ON HAND">
+                            <option class="option" value="DELIVERING">
+                            <option class="option" value="DELIVERED">
                         </datalist>
 
                         <input id="order_id" type="hidden" name="order_id">
@@ -145,7 +147,7 @@
                         {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
 
                         <div class="form-buttons modal-footer">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="button" class="btn btn-success" id="submit">Submit</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_btn">Cancel
                             </button>
                         </div>
@@ -162,6 +164,24 @@
         document.getElementById('close_btn').addEventListener('click', function () {
             document.getElementById('options').value = '';
         });
+
+        let options = document.getElementsByClassName('option')
+        let selected = document.getElementById('options')
+        let count = 0
+
+        document.getElementById('submit').addEventListener('click', function () {
+            for (let i = 0; i < options.length; i++) {
+                if (selected.value === options[i].value){
+                    count += 1
+                }
+            }
+            if (count === 0){
+                document.getElementById('submit').type = 'button'
+            } else if(count === 1){
+                document.getElementById('submit').type = 'submit'
+            }
+        })
+
     </script>
 
 
