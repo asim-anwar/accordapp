@@ -132,10 +132,6 @@
 </style>
 <body>
 
-<div class="loader-wrapper">
-    <span class="loader"><span class="loader-inner"></span></span>
-</div>
-
 {% include 'navbar.html' %}
 
 {% if messages %}
@@ -147,9 +143,15 @@
 {% endif %}
 
 
+
+
 {% block content %}
 
 {% endblock %}
+
+<div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+</div>
 
 <script src="{% static 'js/script.js' %}"></script>
 <script>
