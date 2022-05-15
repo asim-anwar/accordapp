@@ -26,7 +26,7 @@ def loginpage(request):
     page = 'login'
     error = ''
     if request.user.is_authenticated:
-        return redirect('home')
+        return redirect('menu')
 
     if request.method == 'POST':
         email = request.POST.get('email').lower()
@@ -42,7 +42,7 @@ def loginpage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('menu')
         else:
             error = 'Username or password incorrect'
             messages.error(request, 'Username or password incorrect')
@@ -77,6 +77,17 @@ def signup(request):
 
     context = {'page': page, 'form': form, 'error': error}
     return render(request, 'accord/login_register.html', context)
+
+
+@login_required(login_url='login')
+def mainmenu(request):
+    page = 'menu'
+
+    context = {
+        'page': page
+    }
+
+    return render(request, 'accord/managementmenu.html', context)
 
 
 @login_required(login_url='login')
@@ -469,3 +480,14 @@ def pages(request):
 def activity(request):
     posts = Post.objects.all()
     return render(request, 'accord/activity.html', {'posts': posts})
+
+
+@login_required(login_url='login')
+def coinShopHome(request):
+    page = 'coinshophome'
+
+    context = {
+        'page': page
+    }
+
+    return render(request, 'accord/coinshophome.html', context)

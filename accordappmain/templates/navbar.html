@@ -95,9 +95,13 @@
     <div class="container-fluid">
         <div class="col-lg-4">
             <div class="navbar-header">
-                <a href="{% url 'home' %}">
-                    <img src={% static 'images/nav_LOGO.png' %}>
-                </a>
+                {% if page != 'menu' %}
+                    <a href="{% url 'home' %}">
+                        <img src={% static 'images/nav_LOGO.png' %}>
+                    </a>
+                {% else %}
+                        <img src={% static 'images/nav_LOGO.png' %}>
+                {% endif %}
                 {#                <a class="navbar-brand" href="{% url 'home' %}" style="color: #ffcfa5">seikai</a>#}
             </div>
         </div>

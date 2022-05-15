@@ -5,6 +5,7 @@ urlpatterns = [
     path('login/', views.loginpage, name='login'),
     path('logout/', views.logoutuser, name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('menu', views.mainmenu, name='menu'),
 
     path('', views.home, name='home'),
     path('products/', views.products, name='products'),
@@ -24,5 +25,8 @@ urlpatterns = [
     path('create_task/', views.create_task, name='create-task'),
     path('update_lobby/<str:pk>/', views.update_lobby, name='update-lobby'),
     path('delete_lobby/<str:pk>/', views.deleteLobby, name='delete-lobby'),
-    path('delete_post/<str:pk>/', views.deletePost, name='delete-post')
+    path('delete_post/<str:pk>/', views.deletePost, name='delete-post'),
+
+
+    path('coinshophome', views.coinShopHome, name='coinshophome'),
 ]
