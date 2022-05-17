@@ -67,21 +67,23 @@
         }
 
         .tablinks {
-            color: #ffcfa5;
+            color: #ed6a4c;
             font-size: 15px;
             font-weight: normal;
             padding: 5px;
-            background: transparent;
-            border: none
+            background: antiquewhite;
+            border: none;
+            border-radius: 5px;
         }
 
         .tablinks.active {
-            color: #ffcfa5;
+            color: #ed6a4c;
             font-size: 20px;
             font-weight: bold;
             padding: 7px;
-            background: transparent;
+            background: antiquewhite;
             border: none;
+            border-radius: 5px;
             box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3)
         }
 
@@ -164,8 +166,8 @@
                     {% endif %}
                     <div class="tab">
                         <table style="margin-bottom: 5px">
-                            <th style="">
-                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open">Jersey
+                            <th>
+                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open" style="margin-right: 5px">Jersey
                                 </button>
                             </th>
                             <th style="">

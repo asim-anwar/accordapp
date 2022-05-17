@@ -271,7 +271,7 @@ def create_order(request):
     page = 'create-order'
     form = OrderForm()
     error = ''
-    products = Product.objects.all()
+    products = Product.objects.filter(available='Yes')
     # topics = Topic.objects.all()
 
     try:
@@ -290,10 +290,10 @@ def create_order(request):
                 order.save()
                 return redirect('home')
             else:
-                error = form.errors
+                error = 'Selected Product Not Available'
 
     except Exception as e:
-        error = str(e)
+        error = 'Selected Product Not Available'
 
     context = {'page': page, 'form': form, 'error': error, 'products': products}
     return render(request, 'accord/create_update_order.html', context)
