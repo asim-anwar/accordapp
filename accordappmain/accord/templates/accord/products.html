@@ -132,8 +132,8 @@
   outline: none;">
                         <datalist id="available" name="available">
                             {#                                <option value="">Select Availability</option>#}
-                            <option value="Yes">
-                            <option value="No">
+                            <option class="option" value="Yes">
+                            <option class="option" value="No">
                         </datalist>
 
                         <input id="product_id" type="hidden" name="product_id">
@@ -142,7 +142,7 @@
                         {#            <input type="password" placeholder="Enter Password" name="psw" required>#}
 
                         <div class="form-buttons modal-footer">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success" id="submit">Submit</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal" id="close_btn">Cancel
                             </button>
                         </div>
@@ -159,6 +159,24 @@
         document.getElementById('close_btn').addEventListener('click', function () {
             document.getElementById('options').value = '';
         });
+
+        let options = document.getElementsByClassName('option')
+        let selected = document.getElementById('options')
+        let count = 0
+
+        document.getElementById('submit').addEventListener('click', function () {
+            for (let i = 0; i < options.length; i++) {
+                if (selected.value === options[i].value){
+                    count += 1
+                }
+            }
+            if (count === 0){
+                document.getElementById('submit').type = 'button'
+            } else if(count === 1){
+                document.getElementById('submit').type = 'submit'
+            }
+        })
+
     </script>
 
 
