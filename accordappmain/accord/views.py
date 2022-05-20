@@ -548,7 +548,7 @@ def EmailVerificationForUpdate(payload, order_id, product):
         discord = 'https://discord.gg/wbYsKeXzUr'
         mail_footer = 'Reply to this email if you face any problem or contact us on:\n discord - ' + discord + '\n facebook - ' + facebook
         email_body = mail_user_info + '\n \n' + mail_order_info + '\n \n' + mail_footer
-        email_subject = 'Seikai Order Confirmation. Order-ID: ' + order_id
+        email_subject = 'Seikai Order Update Confirmation. Order-ID: ' + order_id
         email_verify = EmailMessage(
             email_subject,
             email_body,
