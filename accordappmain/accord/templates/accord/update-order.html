@@ -55,6 +55,7 @@
                             <div class="form__group">
                                 {% if field.label == 'Order id' %}
                                     <label style="font-size: 20px; font-weight: bold; color: #ffcfa5">{{ field.label }}: {{ field.value }}</label>
+                                    <input type="hidden" name='order_id' value={{ field.value }}>
                                 {% elif field.label == 'Product' %}
                                     <label>{{ field.label }}</label>
                                     <input type="search" list="product" placeholder="{{ order.product.product_id }}"

@@ -498,15 +498,23 @@ def update_order(request, pk):
 
     if request.method == 'POST':
         form = OrderFormPOST(request.POST, instance=order)
+        # order = Order.objects.get(order_id=request.POST.get('order_id'))
+        product = Order.objects.get(order_id=request.POST.get('order_id')).product
         if form.is_valid():
             if request.POST.get('product') != '':
+                product = Product.objects.get(product_id=request.POST.get('product'))
                 quantity = request.POST.get('quantity')
-                price = Product.objects.get(product_id=request.POST.get('product')).price
+                price = product.price
                 order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
                 order.total_price = int(price) * int(quantity)
+            else:
+                order.product_id = product
+                quantity = request.POST.get('quantity')
+                order.total_price = int(product.price) * int(quantity)
             order.updated_by = request.user
             order.updated_date = datetime.datetime.now()
             order.save()
+            mail = EmailVerificationForUpdate(request.POST, order.order_id, product)
             form.save()
 
             return redirect('home')
@@ -515,6 +523,43 @@ def update_order(request, pk):
 
     context = {'page': page, 'form': form, 'products': products, 'order': order}
     return render(request, 'accord/update-order.html', context)
+
+
+def EmailVerificationForUpdate(payload, order_id, product):
+    try:
+        mail_user_info = 'Thank You for staying with Seikai! Your order has been updated. Please Confirm your Seikai updated order details below:'
+        # mail_verification = 'Please enter the following verification code in ShareB app to verify your email: ' + code
+        if product.product_id.startswith('JS'):
+            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
+                'delivery_address') + '\nProduct Name: ' + product.product_name + (
+                                      '\nSize: ' + payload.get('size')) + '\nCustom Jersey Name: ' + payload.get(
+                'custom_name') + '\nCustom Jersey Number: ' + payload.get(
+                'custom_number') + '\nQuantity: ' + payload.get(
+                'quantity') + '\nPaid Amount: ' + payload.get(
+                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        else:
+            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
+                'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
+                'quantity') + '\nPaid Amount: ' + payload.get(
+                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        facebook = 'https://www.facebook.com/seikai.bd'
+        discord = 'https://discord.gg/wbYsKeXzUr'
+        mail_footer = 'Reply to this email if you face any problem or contact us on:\n discord - ' + discord + '\n facebook - ' + facebook
+        email_body = mail_user_info + '\n \n' + mail_order_info + '\n \n' + mail_footer
+        email_subject = 'Seikai Order Confirmation. Order-ID: ' + order_id
+        email_verify = EmailMessage(
+            email_subject,
+            email_body,
+            os.environ.get('EMAIL_HOST_USER'),
+            [payload.get('customer_email')]
+        )
+        email_verify.send(fail_silently=False)
+
+        return 'Confirmation mail sent to customer email.'
+    except Exception as e:
+        return 'Failed to send confirmation mail. Error: ' + str(e)
 
 
 def topics(request):
