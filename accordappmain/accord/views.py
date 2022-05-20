@@ -302,10 +302,10 @@ def create_order(request):
                 # else:
                 #     mail = 2
             else:
-                error = 'Error while taking order'
+                error = 'Error while taking order form' + form.errors
 
     except Exception as e:
-        error = 'Error while taking order'
+        error = 'Error while taking order' + str(e)
 
     context = {'page': page, 'form': form, 'error': error, 'products': products, 'mail': mail}
     return render(request, 'accord/create_update_order.html', context)
