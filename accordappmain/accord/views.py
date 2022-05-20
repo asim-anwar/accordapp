@@ -494,13 +494,18 @@ def update_user(request):
 def update_order(request, pk):
     page = 'update-order'
     order = Order.objects.get(id=pk)
-    form = OrderForm(instance=order)
+    form = OrderFormRetrieve(instance=order)
 
     if request.method == 'POST':
         form = OrderFormPOST(request.POST, instance=order)
         if form.is_valid():
             if request.POST.get('product') != '':
+                quantity = request.POST.get('quantity')
+                price = Product.objects.get(product_id=request.POST.get('product')).price
                 order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
+                order.total_price = int(price) * int(quantity)
+            order.updated_by = request.user
+            order.updated_date = datetime.datetime.now()
             order.save()
             form.save()
 

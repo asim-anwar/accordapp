@@ -30,7 +30,15 @@ class OrderForm(forms.ModelForm):
         model = Order
         # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
         fields = '__all__'
-        exclude = ['created_by', 'created_date']
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date']
+
+
+class OrderFormRetrieve(forms.ModelForm):
+    class Meta:
+        model = Order
+        # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        fields = '__all__'
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'total_price', 'status']
 
 
 class OrderFormPOST(forms.ModelForm):
@@ -38,7 +46,7 @@ class OrderFormPOST(forms.ModelForm):
         model = Order
         # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
         fields = '__all__'
-        exclude = ['created_by', 'created_date', 'product', 'order_id']
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'product', 'order_id']
 
 
 class ProductForm(ModelForm):
@@ -46,6 +54,7 @@ class ProductForm(ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'Enter Product Name'}))
     product_details = forms.CharField(
         widget=forms.Textarea(attrs={'placeholder': 'Enter Product Details'}))
+
     class Meta:
         model = Product
         fields = '__all__'

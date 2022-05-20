@@ -96,6 +96,8 @@ class Order(models.Model):
 
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='order')
     created_date = models.DateTimeField(null=True, blank=True)
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='updated_by_order')
+    updated_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.product
