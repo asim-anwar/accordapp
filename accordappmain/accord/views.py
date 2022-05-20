@@ -1,5 +1,7 @@
 import datetime
+import os
 import random
+import urllib.parse
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -7,6 +9,7 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 
 from .models import *
 from .forms import *
@@ -102,7 +105,7 @@ def home(request):
 
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    orders = Order.objects.all()
+    orders = Order.objects.all().order_by('-status')
     if q != '':
         orders = orders.filter(
             Q(customer_name__icontains=q) |
@@ -110,7 +113,7 @@ def home(request):
             Q(customer_contactnumber__contains=q) |
             Q(order_id__contains=q) |
             Q(product__product_id__contains=q) |
-            Q(status__icontains=q))
+            Q(status__icontains=q)).order_by('-status')
 
     products = Product.objects.all()
     pages = Pages.objects.all()
@@ -136,14 +139,14 @@ def products(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
     orders = Order.objects.all()
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('-available')
     if q != '':
         products = products.filter(
             Q(product_name__icontains=q) |
             Q(price__contains=q) |
             Q(product_type__contains=q) |
             Q(product_id__contains=q) |
-            Q(available__contains=q))
+            Q(available__contains=q)).order_by('-available')
 
     pages = Pages.objects.all()
     if request.user.id == 1:
@@ -271,32 +274,78 @@ def create_order(request):
     page = 'create-order'
     form = OrderForm()
     error = ''
+    mail = ''
     products = Product.objects.filter(available='Yes')
     # topics = Topic.objects.all()
 
     try:
         if request.method == 'POST':
             Price = Product.objects.get(product_id=request.POST.get('product')).price
-            product_id = Product.objects.get(product_id=request.POST.get('product')).id
+            product_id = Product.objects.get(product_id=request.POST.get('product'))
             quantity = request.POST.get('quantity')
             form = OrderFormPOST(request.POST)
+            order_id_gen = 'OD' + str(random.randint(100000, 999999))
+            while Order.objects.filter(order_id=order_id_gen).exists():
+                order_id_gen = 'OD' + str(random.randint(100000, 999999))
             if form.is_valid():
                 order = form.save(commit=False)
                 order.created_by = request.user
                 order.created_date = datetime.datetime.now()
-                order.order_id = 'OD' + str(random.randint(100000, 999999))
+                order.order_id = order_id_gen
                 order.total_price = int(Price) * int(quantity)
-                order.product_id = product_id
+                order.product_id = product_id.id
                 order.save()
+                mail = EmailVerification(request.POST, order_id_gen, product_id)
                 return redirect('home')
+                # if mail.startswith('C'):
+                #     mail = 1
+                # else:
+                #     mail = 2
             else:
-                error = 'Selected Product Not Available'
+                error = 'Error while taking order'
 
     except Exception as e:
-        error = 'Selected Product Not Available'
+        error = 'Error while taking order'
 
-    context = {'page': page, 'form': form, 'error': error, 'products': products}
+    context = {'page': page, 'form': form, 'error': error, 'products': products, 'mail': mail}
     return render(request, 'accord/create_update_order.html', context)
+
+
+def EmailVerification(payload, order_id, product):
+    try:
+        mail_user_info = 'Thank You for staying with Seikai! Please Confirm your Seikai order details below:'
+        # mail_verification = 'Please enter the following verification code in ShareB app to verify your email: ' + code
+        if product.product_id.startswith('JS'):
+            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
+                'delivery_address') + '\nProduct Name: ' + product.product_name + (
+                                      '\nSize: ' + payload.get('size')) + '\nCustom Jersey Name: ' + payload.get(
+                'custom_name') + '\nCustom Jersey Number: ' + payload.get(
+                'custom_number') + '\nQuantity: ' + payload.get(
+                'quantity') + '\nPaid Amount: ' + payload.get(
+                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        else:
+            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
+                'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
+                'quantity') + '\nPaid Amount: ' + payload.get(
+                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        facebook = 'https://www.facebook.com/seikai.bd'
+        discord = 'https://discord.gg/wbYsKeXzUr'
+        mail_footer = 'Reply to this email if you face any problem or contact us on:\n discord - ' + discord + '\n facebook - ' + facebook
+        email_body = mail_user_info + '\n \n' + mail_order_info + '\n \n' + mail_footer
+        email_subject = 'Seikai Order Confirmation. Order-ID: ' + order_id
+        email_verify = EmailMessage(
+            email_subject,
+            email_body,
+            os.environ.get('EMAIL_HOST_USER'),
+            [payload.get('customer_email')]
+        )
+        email_verify.send(fail_silently=False)
+
+        return 'Confirmation mail sent to customer email.'
+    except Exception as e:
+        return 'Failed to send confirmation mail. Error: ' + str(e)
 
 
 @login_required(login_url='login')

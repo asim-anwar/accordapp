@@ -139,6 +139,30 @@
 
     </script>
 
+    {% if mail == 1 %}
+        <div class="alert alert-success" id="success-alert"
+             style="border: solid limegreen;border-radius: 10px; background-color: mediumseagreen; max-width: 50%; font-size: 12px; margin-left: 25%">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> Confirmation mail sent to customer email.
+        </div>
+        <script>
+            $("#success-alert").fadeTo(5000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        </script>
+    {% elif mail == 2 %}
+        <div class="alert alert-danger" id="danger-alert"
+             style="border: solid limegreen;border-radius: 10px">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Failed!</strong> Failed to confirm order.
+        </div>
+        <script>
+            $("#danger-alert").fadeTo(5000, 500).slideUp(500, function () {
+                $("#danger-alert").slideUp(500);
+            });
+        </script>
+    {% endif %}
+
     <div class="container">
         <div class="row">
             <div class="col-lg-pull-12 layout__box">
@@ -167,7 +191,8 @@
                     <div class="tab">
                         <table style="margin-bottom: 5px">
                             <th>
-                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open" style="margin-right: 5px">Jersey
+                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open"
+                                        style="margin-right: 5px">Jersey
                                 </button>
                             </th>
                             <th style="">
@@ -211,7 +236,8 @@
                         <div class="form__group">
                             <label>Product ID</label>
                             {#                            {{ form.product }}#}
-                            <input type="search" list="product" placeholder="Select Product" name='product' onfocus="this.value=''" onchange="this.blur();">
+                            <input type="search" list="product" placeholder="Select Product" name='product'
+                                   onfocus="this.value=''" onchange="this.blur();">
                             <datalist name="product" id="product">
                                 {#                                <option value="">Select Product</option>#}
                                 {% for p in products %}
@@ -292,7 +318,8 @@
                         </div>
                         <div class="form__group">
                             <label>Product ID</label>
-                            <input list="product" placeholder="Select Product" name='product' onfocus="this.value=''" onchange="this.blur();">
+                            <input list="product" placeholder="Select Product" name='product' onfocus="this.value=''"
+                                   onchange="this.blur();">
                             <datalist name="product" id="product">
                                 {% for p in products %}
                                     <option value="{{ p.product_id }}">
