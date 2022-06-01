@@ -48,9 +48,16 @@
 
         .form__group {
             margin-bottom: 2rem;
-            margin-right: 10px;
+            margin-right: -10px;
             width: 98%;
         }
+
+        {#.product {#}
+        {#    margin-bottom: 2rem;#}
+        {#    margin-right: 2px;#}
+        {#    width: 98%;#}
+        {
+        #}#}
 
         .form {
             animation: fadeEffect 1s; /* Fading effect takes 1 second */
@@ -188,7 +195,7 @@
                             {{ error }}
                         </div>
                     {% endif %}
-                    <div class="tab">
+                    <div class="tab" style="margin-left: 5px; padding-bottom: 5px">
                         <table style="margin-bottom: 5px">
                             <th>
                                 <button class="tablinks" onclick="openCity(event, 'jersey')" id="open"
@@ -210,12 +217,12 @@
                             {{ form.customer_name }}
                         </div>
                         <div class="form__group">
-                            <label>Customer Mobile</label>
-                            {{ form.customer_contactnumber }}
-                        </div>
-                        <div class="form__group">
                             <label>Customer Email</label>
                             {{ form.customer_email }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Mobile</label>
+                            {{ form.customer_contactnumber }}
                         </div>
                         <div class="form__group">
                             <label>Customer Address</label>
@@ -225,31 +232,55 @@
                             <label>Delivery Address</label>
                             {{ form.delivery_address }}
                         </div>
-                        <div class="form__group">
-                            <label>Customer Facebook</label>
-                            {{ form.customer_fb }}
+                        <div class="row product-box"
+                             style="border: solid 2px #fc4b0b; border-radius: 10px; max-width: 96%;  margin-left: 0px;">
+                            <div class="row product-div" id="new_product"
+                                 style=" padding: 10px 10px 0px 0px; margin-left: -5px; margin-bottom: 5px; margin-right: -5px">
+                                <div class="col-lg-5" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Product ID</label>
+                                        {#                            {{ form.product }}#}
+                                        <div class="product_entry">
+                                            <input required type="search" list="product" placeholder="Select ID"
+                                                   name='product' class="product_inf"
+                                                   onfocus="this.value=''" onchange="this.blur();">
+                                            <datalist name="product" id="product">
+                                                {% for p in products %}
+                                                    {% if p.product_type == 'Clothing' %}
+                                                        <option value="{{ p.product_id }}">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Quantity</label>
+                                        {#                                        {{ form.quantity }}#}
+                                        <input type="number" name="quantity" id="id_quantity" value=1>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5" style="padding-left: 25px; padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Size</label>
+                                        {#                                        {{ form.size }}#}
+                                        <input type="text" name="size" maxlength="200" id="id_size" class="product_inf">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form__group">
-                            <label>Customer Discord</label>
-                            {{ form.customer_discord }}
-                        </div>
-                        <div class="form__group">
-                            <label>Product ID</label>
-                            {#                            {{ form.product }}#}
-                            <input type="search" list="product" placeholder="Select Product" name='product'
-                                   onfocus="this.value=''" onchange="this.blur();">
-                            <datalist name="product" id="product">
-                                {#                                <option value="">Select Product</option>#}
-                                {% for p in products %}
-                                    {% if p.product_type == 'Clothing' %}
-                                        <option value="{{ p.product_id }}">
-                                    {% endif %}
-                                {% endfor %}
-                            </datalist>
-                        </div>
-                        <div class="form__group">
-                            <label>Size</label>
-                            {{ form.size }}
+                        <div style="margin-bottom: 10px">
+                            <button type="button" id="add_product" class="btn btn-primary"
+                                    style="background-color: #fc4b0b; border: none; margin-top: 5px; padding: 10px">Add
+                                Product
+                            </button>
+                            <button type="button" id="confirm_btn" class="btn btn-success"
+                                    style="border: none; margin-top: 5px; padding: 10px">Confirm
+                            </button>
                         </div>
                         <div class="form__group">
                             <label>Custom Name</label>
@@ -258,10 +289,6 @@
                         <div class="form__group">
                             <label>Custom Number</label>
                             {{ form.custom_number }}
-                        </div>
-                        <div class="form__group">
-                            <label>Quantity</label>
-                            {{ form.quantity }}
                         </div>
                         <div class="form__group">
                             <label>Paid Amount</label>
@@ -279,11 +306,20 @@
                             <label>Bkash TXN ID</label>
                             {{ form.bkash_txn_id }}
                         </div>
+                        <div class="form__group">
+                            <label>Customer Facebook</label>
+                            {{ form.customer_fb }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Discord</label>
+                            {{ form.customer_discord }}
+                        </div>
+                        <input type="hidden" id="products_list" name="products_list">
 
 
                         <div class="form__action" style="margin-right: 2%">
                             <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
-                            <button class="btn btn--main" type="submit">Submit</button>
+                            <button class="btn btn--main" id="submit" type="submit" disabled>Submit</button>
                         </div>
                     </form>
 
@@ -320,7 +356,8 @@
                         </div>
                         <div class="form__group">
                             <label>Product ID</label>
-                            <input type="search" list="product2" placeholder="Select Product" name='product' onfocus="this.value=''"
+                            <input type="search" list="product2" placeholder="Select Product" name='product'
+                                   onfocus="this.value=''"
                                    onchange="this.blur();">
                             <datalist name="product" id="product2">
                                 {% for p in products %}
@@ -362,5 +399,114 @@
         </div>
     </div>
     <script>document.getElementById('open').click()</script>
+
+    <script>
+        document.getElementsByName('quantity')[document.getElementsByName('quantity').length - 2].setAttribute('class', 'product_inf')
+        document.getElementsByName('size')[document.getElementsByName('size').length - 1].setAttribute('class', 'product_inf')
+
+        $(document).ready(function () {
+            const max_fields = 5; //maximum input boxes allowed
+            let wrapper = $(".product-box"); //Fields wrapper
+            let add_button = $(".btn-primary"); //Add button ID
+            let confirm_btn = $(".btn-success"); //Confirm button ID
+
+            let x = 1; //initlal text box count
+            let products_array = []
+
+            $(add_button).click(function (e) { //on add input button click
+                let product_orders = document.getElementsByClassName('product_inf')
+                let dict = {}
+                for (let i = 0; i < product_orders.length; i++) {
+                    dict[product_orders[i].name] = product_orders[i].value
+                    product_orders[i].setAttribute("disabled", true)
+                }
+                products_array.push(dict)
+
+                e.preventDefault();
+                if (x < max_fields) { //max input box allowed
+                    x++; //text box increment
+                    $(wrapper).append(`<div class="row product-div" id="new_product"
+                                 style=" padding: 10px 10px 0px 0px; margin-left: -3px;  margin-right: -5px">
+                                <div class="col-lg-4" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Product ID</label>
+                                        <div>
+                                            <input required type="search" list="product" placeholder="Select ID"
+                                                   name='product' class="product_inf"
+                                                   onfocus="this.value=''" onchange="this.blur();">
+                                            <datalist name="product" id="product">
+                                                                                <option value="">Select Product</option>
+                                                {% for p in products %}
+                                                    {% if p.product_type == 'Clothing' %}
+                                                        <option value="{{ p.product_id }}">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Quantity</label>
+{#                                        {{ form.quantity }}#}
+                                        <input type="number" name="quantity" id="id_quantity" value=1>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="padding-left: 25px; padding-right: 0px">
+                                    <div class="form__group">
+                                        <label>Size</label>
+                                        {{ form.size }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 1px;">
+                                    <button type="button" id="` + x + `" class="btn btn-primary remove_product"
+                                            style="background-color: #565656; border: none; margin-top: 33px"><img src="https://img.icons8.com/external-kosonicon-solid-kosonicon/32/ffffff/external-bin-cleaning-kosonicon-solid-kosonicon.png"/>
+                                    </button>
+                                </div>
+                            </div>`); //add input box
+                }
+
+                document.getElementsByName('quantity')[document.getElementsByName('quantity').length - 2].setAttribute('class', 'product_inf')
+                document.getElementsByName('size')[document.getElementsByName('size').length - 1].setAttribute('class', 'product_inf')
+
+
+            });
+
+            $(confirm_btn).click(function (e) { //on click disable fields and button
+                let product_orders = document.getElementsByClassName('product_inf')
+                let dict = {}
+                for (let i = 0; i < product_orders.length; i++) {
+                    dict[product_orders[i].name] = product_orders[i].value
+                    product_orders[i].setAttribute("disabled", true)
+                }
+                products_array.push(dict)
+                $('.remove_product').each(function (i) {
+                    $(this).attr('disabled', true);
+                });
+                document.getElementById('add_product').setAttribute('disabled', true)
+                document.getElementById('confirm_btn').setAttribute('disabled', true)
+                document.getElementById('submit').disabled = false
+
+                e.preventDefault();
+            });
+
+
+            $(wrapper).on("click", ".remove_product", function (e) { //user click on remove product entry
+                e.preventDefault();
+                products_array.splice(parseInt(this.id) - 1, 1)
+                $(this).parent('div').parent('div').remove();
+                x--;
+            })
+
+            document.getElementById('submit').addEventListener('click', () => {
+                document.getElementById('products_list').value = JSON.stringify(products_array)
+            })
+
+        });
+
+
+    </script>
 
 {% endblock %}

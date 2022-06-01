@@ -66,20 +66,41 @@
 
 
     <div class="container">
-        <div class="row">
-            <div class="col-lg-2 col-sm-auto pages">
-                {% include 'accord/topics_component.html' %}
-            </div>
-            {#            <div class="col-lg-1">#}
-            {##}
-            {#            </div>#}
-            <div class="col-lg-10 col-sm-auto">
-                <div class="roomList">
-                    <div class="mobile-menu">
-                        <div class="mobile-menuItems">
-                            <a class="btn btn--main btn--pill" href='http://103.139.235.239:3000/pages/'>Browse
-                                Pages</a>
-                        </div>
+    <div class="row" style="margin-right: -100px">
+        <div class="col-lg-2 col-sm-auto pages">
+            {% include 'accord/topics_component.html' %}
+        </div>
+        {#            <div class="col-lg-1">#}
+        {##}
+        {#            </div>#}
+        <div class="col-lg-10 col-sm-auto">
+            <div class="roomList">
+                <div class="mobile-menu">
+                    <div class="mobile-menuItems">
+                        <a class="btn btn--main btn--pill" href='http://103.139.235.239:3000/pages/'>Browse
+                            Pages</a>
+                    </div>
+                </div>
+                <div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags == 'success' %}
+                                <div class="alert alert-success" role="alert">
+                                <button type="button" class="close" data-dismiss="alert"
+                                        aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <strong>Success!</strong> {{ message }}
+                                </div>
+                            {% elif message.tags == 'error' %}
+                                <div class="alert alert-danger" role="alert" style="background-color: red; color: whitesmoke; border: 1px solid whitesmoke; border-radius: 10px">
+                                <button type="button" class="close" data-dismiss="alert" style="color: whitesmoke"
+                                        aria-label="Close"><span
+                                        aria-hidden="true" style="color: whitesmoke">&times;</span></button>
+                                <strong>Error!</strong> {{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                     </div>
                     <div class="roomList__header">
                         <div>
@@ -148,9 +169,8 @@
   outline: none;">
                         <datalist id="available" name="available">
                             <option class="option" value="PENDING">
-                            <option class="option" value="SHIPPING">
+                            <option class="option" value="IN PRODUCTION">
                             <option class="option" value="ON HAND">
-                            <option class="option" value="DELIVERING">
                             <option class="option" value="DELIVERED">
                         </datalist>
 
@@ -206,6 +226,12 @@
                 });
             });
         });
+
+        window.setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+        }, 4000);
     </script>
 
 

@@ -82,7 +82,7 @@ class Order(models.Model):
     customer_fb = models.CharField(max_length=200, null=True, blank=True)
     customer_discord = models.CharField(max_length=200, null=True, blank=True)
 
-    quantity = models.IntegerField(null=True, blank=False)
+    quantity = models.IntegerField(null=True, blank=True)
     size = models.CharField(max_length=200, null=True, blank=True)
     custom_name = models.CharField(max_length=200, null=True, blank=True)
     custom_number = models.CharField(max_length=20, null=True, blank=True)
@@ -101,6 +101,14 @@ class Order(models.Model):
 
     def __str__(self):
         return self.product
+
+
+class Order_Product(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=False, related_name='order_product')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=False, related_name='product_order')
+
+    quantity = models.IntegerField(null=True, blank=False)
+    size = models.CharField(max_length=200, null=True, blank=True)
 
 
 class Tasks(models.Model):

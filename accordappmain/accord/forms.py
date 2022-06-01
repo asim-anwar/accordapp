@@ -38,7 +38,7 @@ class OrderFormRetrieve(forms.ModelForm):
         model = Order
         # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
         fields = '__all__'
-        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'total_price', 'status']
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'total_price', 'status', 'quantity', 'size']
 
 
 class OrderFormPOST(forms.ModelForm):
@@ -78,3 +78,8 @@ class TaskForm(ModelForm):
         widgets = {
             'deadline_date': DateInput(),
         }
+
+class OrderProductForm(ModelForm):
+    class Meta:
+        model = Order_Product
+        fields = ['quantity', 'size']

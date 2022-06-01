@@ -1,7 +1,9 @@
 import datetime
+import json
 import os
 import random
 import urllib.parse
+from email.mime.image import MIMEImage
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -9,7 +11,8 @@ from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from .models import *
 from .forms import *
@@ -102,10 +105,13 @@ def home(request):
         # print(product, available)
         order.status = request.POST.get('available')
         order.save()
+        if order.status in ['IN PRODUCTION', 'ON HAND']:
+            mail = EmailVerificationForUpdate(order)
+            print(mail)
 
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    orders = Order.objects.all().order_by('-status')
+    orders = Order.objects.all().order_by('-id')
     if q != '':
         orders = orders.filter(
             Q(customer_name__icontains=q) |
@@ -113,16 +119,18 @@ def home(request):
             Q(customer_contactnumber__contains=q) |
             Q(order_id__contains=q) |
             Q(product__product_id__contains=q) |
-            Q(status__icontains=q)).order_by('-status')
+            Q(status__icontains=q)).order_by('-id')
 
     products = Product.objects.all()
+    order_products = Order_Product.objects.all()
     pages = Pages.objects.all()
     if request.user.id == 1:
         tasks = Tasks.objects.all()
     else:
         tasks = Tasks.objects.filter(assigned_to=request.user)
 
-    context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'tasks': tasks}
+    context = {'page': page, 'orders': orders, 'pages': pages, 'products': products, 'order_products': order_products,
+               'tasks': tasks}
     return render(request, 'accord/home.html', context)
 
 
@@ -280,9 +288,12 @@ def create_order(request):
 
     try:
         if request.method == 'POST':
-            Price = Product.objects.get(product_id=request.POST.get('product')).price
-            product_id = Product.objects.get(product_id=request.POST.get('product'))
-            quantity = request.POST.get('quantity')
+            product_list = request.POST.get('products_list')
+            product_list = json.loads(product_list)
+
+            # Price = Product.objects.get(product_id=request.POST.get('product')).price
+            # product_id = Product.objects.get(product_id=request.POST.get('product'))
+            # quantity = request.POST.get('quantity')
             form = OrderFormPOST(request.POST)
             order_id_gen = 'OD' + str(random.randint(100000, 999999))
             while Order.objects.filter(order_id=order_id_gen).exists():
@@ -292,55 +303,102 @@ def create_order(request):
                 order.created_by = request.user
                 order.created_date = datetime.datetime.now()
                 order.order_id = order_id_gen
-                order.total_price = int(Price) * int(quantity)
-                order.product_id = product_id.id
-                order.save()
-                mail = EmailVerification(request.POST, order_id_gen, product_id)
+                # order.total_price =
+                # order.product_id = product_id.id
+                total = 0
+                ordered_products = []
+
+                for selected_product in product_list:
+                    form2 = OrderProductForm(selected_product)
+                    if form2.is_valid():
+                        product_entry = form2.save(commit=False)
+                        product_entry.product_id = Product.objects.get(product_id=selected_product['product']).id
+                        total += Product.objects.get(product_id=selected_product['product']).price * int(
+                            selected_product['quantity'])
+                        order.total_price = total
+                        order.save()
+                        product_entry.order_id = order.id
+                        product_entry.save()
+                    else:
+                        error = 'Error while taking order form: ' + str(form2.errors)
+                orders = Order_Product.objects.filter(order_id=order.id)
+                for od in orders:
+                    ordered_products.append(od)
+                context = {'page': page, 'order': order, 'products': orders, 'total': total,
+                           'due': str(total - int(request.POST.get(
+                               'paid')))}
+                mail = EmailVerification(request.POST, order, ordered_products, context)
+                print(mail)
                 return redirect('home')
                 # if mail.startswith('C'):
                 #     mail = 1
                 # else:
                 #     mail = 2
             else:
-                error = 'Error while taking order form' + form.errors
+                error = 'Error while taking order form: ' + str(form.errors)
 
     except Exception as e:
-        error = 'Error while taking order' + str(e)
+        error = 'Error while taking order: ' + str(e)
 
     context = {'page': page, 'form': form, 'error': error, 'products': products, 'mail': mail}
     return render(request, 'accord/create_update_order.html', context)
 
 
-def EmailVerification(payload, order_id, product):
+def EmailVerification(payload, order, ordered_products, context):
     try:
+        product_info = ''
         mail_user_info = 'Thank You for staying with Seikai! Please Confirm your Seikai order details below:'
         # mail_verification = 'Please enter the following verification code in ShareB app to verify your email: ' + code
-        if product.product_id.startswith('JS'):
-            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
-                'delivery_address') + '\nProduct Name: ' + product.product_name + (
-                                      '\nSize: ' + payload.get('size')) + '\nCustom Jersey Name: ' + payload.get(
-                'custom_name') + '\nCustom Jersey Number: ' + payload.get(
-                'custom_number') + '\nQuantity: ' + payload.get(
-                'quantity') + '\nPaid Amount: ' + payload.get(
-                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
-                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
-        else:
-            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
-                'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
-                'quantity') + '\nPaid Amount: ' + payload.get(
-                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
-                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        mail_order_info_1 = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
+            'delivery_address') + '\n ----------------------------------------------'
+        mail_order_info_2 = '\nCustom Jersey Name: ' + payload.get(
+            'custom_name') + '\nCustom Jersey Number: ' + payload.get(
+            'custom_number') + '\nPaid Amount: ' + payload.get(
+            'paid') + '\nDue Payment: ' + str(order.total_price - int(payload.get(
+            'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        for product in ordered_products:
+            if product.product.product_id.startswith('JS'):
+                product_info += '\nProduct Name: ' + product.product.product_name + '\nSize: ' + str(
+                    product.size) + '\nQuantity: ' + str(
+                    product.quantity) + '\n ----------------------------------------------'
+            else:
+                mail_order_info = 'Customer Name: ' + payload.get(
+                    'customer_name') + '\nDelivery Address: ' + payload.get(
+                    'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
+                    'quantity') + '\nPaid Amount: ' + payload.get(
+                    'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+                    'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
         facebook = 'https://www.facebook.com/seikai.bd'
         discord = 'https://discord.gg/wbYsKeXzUr'
+        mail_order_info = mail_order_info_1 + product_info + mail_order_info_2
         mail_footer = 'Reply to this email if you face any problem or contact us on:\n discord - ' + discord + '\n facebook - ' + facebook
         email_body = mail_user_info + '\n \n' + mail_order_info + '\n \n' + mail_footer
-        email_subject = 'Seikai Order Confirmation. Order-ID: ' + order_id
-        email_verify = EmailMessage(
+        email_subject = 'Seikai Order Confirmation. Order-ID: ' + order.order_id
+
+        html_body = render_to_string('accord/email_template.html', context)
+
+        email_verify = EmailMultiAlternatives(
             email_subject,
             email_body,
             os.environ.get('EMAIL_HOST_USER'),
             [payload.get('customer_email')]
         )
+        # )email_verify = EmailMessage(
+        #     email_subject,
+        #     email_body,
+        #     os.environ.get('EMAIL_HOST_USER'),
+        #     [payload.get('customer_email')]
+        # )
+        email_verify.attach_alternative(html_body, 'text/html')
+        # img_dir = 'static\images'
+        # image = 'NavLogo.png'
+        # file_path = os.path.join(img_dir, image)
+        # with open(file_path, 'r') as f:
+        #     img = MIMEImage(f.read())
+        #     img.add_header('Content-ID', '<{}>'.format(image))
+        #     img.add_header('Content-Disposition', 'inline', filename=image)
+        # email_verify.attach(img)
+        # email_verify.mixed_subtype = 'related'
         email_verify.send(fail_silently=False)
 
         return 'Confirmation mail sent to customer email.'
@@ -492,74 +550,119 @@ def update_user(request):
 
 @login_required(login_url='login')
 def update_order(request, pk):
-    page = 'update-order'
-    order = Order.objects.get(id=pk)
-    form = OrderFormRetrieve(instance=order)
-
-    if request.method == 'POST':
-        form = OrderFormPOST(request.POST, instance=order)
-        # order = Order.objects.get(order_id=request.POST.get('order_id'))
-        product = Order.objects.get(order_id=request.POST.get('order_id')).product
-        if form.is_valid():
-            if request.POST.get('product') != '':
-                product = Product.objects.get(product_id=request.POST.get('product'))
-                quantity = request.POST.get('quantity')
-                price = product.price
-                order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
-                order.total_price = int(price) * int(quantity)
-            else:
-                order.product_id = product
-                quantity = request.POST.get('quantity')
-                order.total_price = int(product.price) * int(quantity)
-            order.updated_by = request.user
-            order.updated_date = datetime.datetime.now()
-            order.save()
-            mail = EmailVerificationForUpdate(request.POST, order.order_id, product)
-            form.save()
-
-            return redirect('home')
-    products = Product.objects.all()
-    order = Order.objects.get(id=pk)
-
-    context = {'page': page, 'form': form, 'products': products, 'order': order}
-    return render(request, 'accord/update-order.html', context)
-
-
-def EmailVerificationForUpdate(payload, order_id, product):
     try:
-        mail_user_info = 'Thank You for staying with Seikai! Your order has been updated. Please Confirm your Seikai updated order details below:'
-        # mail_verification = 'Please enter the following verification code in ShareB app to verify your email: ' + code
-        if product.product_id.startswith('JS'):
-            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
-                'delivery_address') + '\nProduct Name: ' + product.product_name + (
-                                      '\nSize: ' + payload.get('size')) + '\nCustom Jersey Name: ' + payload.get(
-                'custom_name') + '\nCustom Jersey Number: ' + payload.get(
-                'custom_number') + '\nQuantity: ' + payload.get(
-                'quantity') + '\nPaid Amount: ' + payload.get(
-                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
-                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
-        else:
-            mail_order_info = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
-                'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
-                'quantity') + '\nPaid Amount: ' + payload.get(
-                'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
-                'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
-        facebook = 'https://www.facebook.com/seikai.bd'
-        discord = 'https://discord.gg/wbYsKeXzUr'
-        mail_footer = 'Reply to this email if you face any problem or contact us on:\n discord - ' + discord + '\n facebook - ' + facebook
-        email_body = mail_user_info + '\n \n' + mail_order_info + '\n \n' + mail_footer
-        email_subject = 'Seikai Order Update Confirmation. Order-ID: ' + order_id
-        email_verify = EmailMessage(
+        page = 'update-order'
+        order = Order.objects.get(id=pk)
+        order_products = Order_Product.objects.filter(order_id=order.id)
+        form = OrderFormRetrieve(instance=order)
+
+        if request.method == 'POST':
+            product_list = json.loads(request.POST.get('products_list'))
+            prev_orders = Order_Product.objects.filter(order_id=order.id)
+            form = OrderFormPOST(request.POST, instance=order)
+            # order = Order.objects.get(order_id=request.POST.get('order_id'))
+            # product = Order.objects.get(order_id=request.POST.get('order_id')).product
+            if form.is_valid():
+                total = 0
+                prev_orders.delete()
+                for new_product in product_list:
+                    form2 = OrderProductForm(new_product)
+                    if form2.is_valid():
+                        product_entry = form2.save(commit=False)
+                        product_entry.product_id = Product.objects.get(product_id=new_product['product']).id
+                        total += Product.objects.get(product_id=new_product['product']).price * int(
+                            new_product['quantity'])
+                        order.total_price = total
+                        product_entry.order_id = order.id
+                        product_entry.save()
+                    else:
+                        error = 'Error while taking order form: ' + str(form2.errors)
+                # if request.POST.get('product') != '':
+                #     product = Product.objects.get(product_id=request.POST.get('product'))
+                #     quantity = request.POST.get('quantity')
+                #     price = product.price
+                #     order.product_id = Product.objects.get(product_id=request.POST.get('product')).id
+                #     order.total_price = int(price) * int(quantity)
+                # else:
+                #     order.product_id = product
+                #     quantity = request.POST.get('quantity')
+                #     order.total_price = int(product.price) * int(quantity)
+                order.updated_by = request.user
+                order.updated_date = datetime.datetime.now()
+                order.save()
+                ordered_products = Order_Product.objects.filter(order_id=order.id)
+                # mail = EmailVerificationForUpdate(request.POST, order, ordered_products)
+                form.save()
+                messages.success(request, 'Order Updated Successfully.')
+
+                return redirect('home')
+            else:
+                error = 'Error while taking order form: ' + str(form.errors)
+                messages.error(request, 'Failed to update order.')
+        products = Product.objects.all()
+        order = Order.objects.get(id=pk)
+
+        context = {'page': page, 'form': form, 'products': products, 'order': order, 'order_products': order_products}
+        return render(request, 'accord/update-order.html', context)
+
+    except Exception as e:
+        error = 'Error while taking order form: ' + str(e)
+        messages.error(request, 'Failed to update order.')
+        return redirect('home')
+
+
+def EmailVerificationForUpdate(order):
+    try:
+        # product_info = ''
+        # mail_user_info = 'Thank You for staying with Seikai! Your order has been updated. Please Confirm your Seikai updated order details below:'
+        # # mail_verification = 'Please enter the following verification code in ShareB app to verify your email: ' + code
+        # mail_order_info_1 = 'Customer Name: ' + payload.get('customer_name') + '\nDelivery Address: ' + payload.get(
+        #     'delivery_address') + '\n ----------------------------------------------'
+        #
+        # mail_order_info_2 = '\nCustom Jersey Name: ' + payload.get(
+        #     'custom_name') + '\nCustom Jersey Number: ' + payload.get(
+        #     'custom_number') + '\nPaid Amount: ' + payload.get(
+        #     'paid') + '\nDue Payment: ' + str(order.total_price - int(payload.get(
+        #     'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        #
+        # for product in ordered_products:
+        #     if product.product.product_id.startswith('JS'):
+        #         product_info += '\nProduct Name: ' + product.product.product_name + '\nSize: ' + str(
+        #             product.size) + '\nQuantity: ' + str(
+        #             product.quantity) + '\n ----------------------------------------------'
+        #     else:
+        #         mail_order_info = 'Customer Name: ' + payload.get(
+        #             'customer_name') + '\nDelivery Address: ' + payload.get(
+        #             'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
+        #             'quantity') + '\nPaid Amount: ' + payload.get(
+        #             'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+        #             'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+        # facebook = 'https://www.facebook.com/seikai.bd'
+        # discord = 'https://discord.gg/wbYsKeXzUr'
+        # mail_order_info = mail_order_info_1 + product_info + mail_order_info_2
+        # mail_footer = 'Reply to this email if you face any problem or contact us on:\n discord - ' + discord + '\n facebook - ' + facebook
+        email_body = 'Order Updated to ' + order.status
+        email_subject = 'Seikai Order Update. Order-ID: ' + order.order_id
+        # email_verify = EmailMessage(
+        #     email_subject,
+        #     email_body,
+        #     os.environ.get('EMAIL_HOST_USER'),
+        #     [payload.get('customer_email')]
+        # )
+        context = {'order': order}
+        html_body = render_to_string('accord/status _mail.html', context)
+        email_verify = EmailMultiAlternatives(
             email_subject,
             email_body,
             os.environ.get('EMAIL_HOST_USER'),
-            [payload.get('customer_email')]
+            [order.customer_email]
         )
+        email_verify.attach_alternative(html_body, 'text/html')
         email_verify.send(fail_silently=False)
 
-        return 'Confirmation mail sent to customer email.'
+        return 'Status update mail sent to customer email.'
     except Exception as e:
-        return 'Failed to send confirmation mail. Error: ' + str(e)
+        return 'Failed to send status update mail. Error: ' + str(e)
 
 
 def topics(request):
