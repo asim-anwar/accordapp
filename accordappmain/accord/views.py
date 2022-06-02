@@ -329,6 +329,7 @@ def create_order(request):
                                'paid')))}
                 mail = EmailVerification(request.POST, order, ordered_products, context)
                 print(mail)
+                messages.success(request, 'Order Created Successfully.')
                 return redirect('home')
                 # if mail.startswith('C'):
                 #     mail = 1
@@ -339,6 +340,7 @@ def create_order(request):
 
     except Exception as e:
         error = 'Error while taking order: ' + str(e)
+        messages.error(request, 'Failed to create order.')
 
     context = {'page': page, 'form': form, 'error': error, 'products': products, 'mail': mail}
     return render(request, 'accord/create_update_order.html', context)
