@@ -87,7 +87,8 @@
                                                     <div class="form__group">
                                                         <label>Quantity</label>
                                                         {#                                        {{ form.quantity }}#}
-                                                        <input required type="number" name="quantity" id="id_quantity" class="product_inf"
+                                                        <input required type="number" name="quantity" id="id_quantity"
+                                                               class="product_inf"
                                                                value="{{ details.quantity }}">
                                                     </div>
                                                 </div>
@@ -96,7 +97,8 @@
                                                     <div class="form__group">
                                                         <label>Size</label>
                                                         {#                                        {{ form.size }}#}
-                                                        <input required type="text" name="size" maxlength="200" id="id_size"
+                                                        <input required type="text" name="size" maxlength="200"
+                                                               id="id_size"
                                                                class="product_inf" value="{{ details.size }}">
                                                     </div>
                                                 </div>
@@ -135,9 +137,9 @@
     </main>
 
     <script>
-        document.getElementsByName('quantity')[document.getElementsByName('quantity').length - 2].setAttribute('class', 'product_inf')
-        document.getElementsByName('size')[document.getElementsByName('size').length - 1].setAttribute('class', 'product_inf')
-
+        {#debugger#}
+        {#document.getElementsByName('quantity')[document.getElementsByName('quantity').length - 2].setAttribute('class', 'product_inf')#}
+        {#document.getElementsByName('size')[document.getElementsByName('size').length - 1].setAttribute('class', 'product_inf')#}
 
         $(document).ready(function () {
             const max_fields = 6 - {{ order_products.count }}; //maximum input boxes allowed
@@ -216,7 +218,7 @@
                 for (let i = 0; i < product_orders.length; i++) {
                     dict[product_orders[i].name] = product_orders[i].value
                     product_orders[i].setAttribute("disabled", true)
-                    if (i!== 0 && (i+1)%3 === 0){
+                    if (i !== 0 && (i + 1) % 3 === 0) {
                         products_array.push(dict)
                         console.log(dict)
                         dict = {}
