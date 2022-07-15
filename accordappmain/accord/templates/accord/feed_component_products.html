@@ -62,12 +62,19 @@
         opacity: 1;
     }
 
+    .img-thumbnail {
+        max-width: 75px;
+        max-height: 75px;
+    }
+
     td {
-    {#border-right: 1px solid black;#} text-align: center;
+        text-align: center;
         vertical-align: center;
         border-bottom: 1px solid #fc4b0b;
-    {#padding-top: 1rem;#} padding: 0.8rem;
-    {#    border-radius: 5px;#}
+        padding: 0.8rem;
+        word-wrap: break-word;
+        min-width: 10px;
+        max-width: 160px;
     }
 
     tr {
@@ -89,8 +96,9 @@
     }
 
 </style>
-<div class="col-lg-pull-12 table-products" style="max-height:650px;min-height:80px;overflow:auto;border: 3px solid black; border-radius: 10px;">
-    <table class="table table-hover table-bordered" >
+<div class="col-lg-pull-12 table-products"
+     style="max-height:650px;min-height:80px;overflow:auto;border: 3px solid black; border-radius: 10px;">
+    <table class="table table-hover table-bordered table-responsive">
         <tr>
             <th>Product ID</th>
             <th>Product Name</th>
@@ -98,6 +106,7 @@
             <th>Price</th>
             <th>Preorder</th>
             <th>Product Type</th>
+            <th>Product Image</th>
             <th>Availability</th>
         </tr>
 
@@ -132,10 +141,14 @@
                 <td>
                     <span>{{ product.product_type }}</span>
                 </td>
+                <td>
+                    <span><img src="{{ product.avatar.url }}" class="img-thumbnail rounded"></span>
+                </td>
 
                 <td>
 
-                    <button type="button" class="btn btn-primary passingID" data-toggle="modal" data-target="#myModal" id="{{ product.id }}">
+                    <button type="button" class="btn btn-primary passingID" data-toggle="modal" data-target="#myModal"
+                            id="{{ product.id }}">
                         {{ product.available }}
                     </button>
                 </td>

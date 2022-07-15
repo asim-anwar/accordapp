@@ -26,6 +26,16 @@ class UserForm(ModelForm):
 
 
 class OrderForm(forms.ModelForm):
+    # PAYMENT_CHOICES = [
+    #     ('', 'Select Bkash/Nagad number you paid to'),
+    #     (7, '01797407811'),
+    #     (4, '01960008530'),
+    #     (3, '01309956343'),
+    #     (5, '01609212434'),
+    #     (6, '01941171107')
+    # ]
+    # money_received_by = forms.IntegerField(label='Enter Payment to number', widget=forms.Select(choices=PAYMENT_CHOICES))
+
     class Meta:
         model = Order
         # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
@@ -38,7 +48,8 @@ class OrderFormRetrieve(forms.ModelForm):
         model = Order
         # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
         fields = '__all__'
-        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'total_price', 'status', 'quantity', 'size']
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'total_price', 'status', 'quantity',
+                   'size']
 
 
 class OrderFormPOST(forms.ModelForm):
@@ -79,7 +90,8 @@ class TaskForm(ModelForm):
             'deadline_date': DateInput(),
         }
 
+
 class OrderProductForm(ModelForm):
     class Meta:
         model = Order_Product
-        fields = ['quantity', 'size']
+        fields = ['quantity', 'size', 'sleeve']

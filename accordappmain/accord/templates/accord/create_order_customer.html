@@ -1,0 +1,899 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffcfa5;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #565656;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: black;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: #ffcfa5;
+        }
+
+        li:hover {
+            background-color: #ed6a4c;
+            font-weight: bolder;
+        }
+
+        .dropdown-menu {
+        {#width: 300px;#} white-space: normal;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .product-input {
+            margin: 10px;
+            display: none;
+        }
+
+        .form-select {
+            margin: 10px;
+            display: none;
+        }
+
+        .img-thumbnail {
+            max-width: 150px;
+            max-height: 150px;
+        }
+
+        .layout__box {
+            position: absolute;
+            width: 100%;
+            max-width: 60rem;
+            transform: translate(-50%, -46%);
+            margin-top: 5rem;
+            background-color: var(--color-dark);
+            border-radius: 1rem;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-height: 730px;
+        }
+
+        .layout__boxHeader {
+            text-align: center;
+            display: flex;
+            padding: 1.5rem;
+            background-color: var(--color-dark-light);
+        }
+
+        .layout__body {
+            min-height: 40rem;
+            max-height: 65rem;
+            margin: 3rem;
+            overflow: auto;
+            max-height: 600px;
+        }
+
+        .form__group {
+            margin-bottom: 2rem;
+            margin-right: -10px;
+            width: 98%;
+        }
+
+        {#.product {#}
+        {#    margin-bottom: 2rem;#}
+        {#    margin-right: 2px;#}
+        {#    width: 98%;#}
+        {#{#}
+
+        .form {
+            animation: fadeEffect 1s; /* Fading effect takes 1 second */
+        }
+
+        /* Go from zero to full opacity */
+        @keyframes fadeEffect {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .tablinks {
+            color: #ed6a4c;
+            font-size: 15px;
+            font-weight: normal;
+            padding: 5px;
+            background: antiquewhite;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .tablinks.active {
+            color: #ed6a4c;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 7px;
+            background: antiquewhite;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3)
+        }
+
+        .alert {
+            padding: 10px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+            margin-top: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
+
+        .loader-wrapper {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: antiquewhite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            position: relative;
+            border: 4px solid #ed6a4c;
+        {#top: 50%;#} animation: loader 2s infinite ease;
+        }
+
+        .loader-inner {
+            vertical-align: top;
+            display: inline-block;
+            width: 100%;
+            background-color: #ed6a4c;
+            animation: loader-inner 2s infinite ease-in;
+        }
+
+        @keyframes loader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(180deg);
+            }
+
+            50% {
+                transform: rotate(180deg);
+            }
+
+            75% {
+                transform: rotate(360deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes loader-inner {
+            0% {
+                height: 0%;
+            }
+
+            25% {
+                height: 0%;
+            }
+
+            50% {
+                height: 100%;
+            }
+
+            75% {
+                height: 100%;
+            }
+
+            100% {
+                height: 0%;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                width: 100%;
+            }
+
+            .form-check-label {
+                margin-left: -3%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                width: 100%;
+            }
+
+            ::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            .form-select {
+                max-width: 95%;
+            }
+
+            .quantity {
+                margin-left: -5px;
+            }
+        }
+
+        {#animations#}
+
+        @media (min-width: 1200px) {
+
+
+            .animated {
+                background-repeat: no-repeat;
+                -webkit-animation-duration: 10s;
+                animation-duration: 2s;
+                -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+            }
+
+            .animated2 {
+                background-repeat: no-repeat;
+                -webkit-animation-duration: 10s;
+                animation-duration: 2s;
+                -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+            }
+
+            @-webkit-keyframes fadeInLeft {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: translateX(-20px);
+                }
+
+                100% {
+                    opacity: 1;
+                    -webkit-transform: translateX(0);
+                }
+            }
+
+            @-webkit-keyframes fadeInRight {
+                0% {
+                    opacity: 0;
+                    -webkit-transform: translateX(-20px);
+                }
+
+                100% {
+                    opacity: 1;
+                    -webkit-transform: translateX(0);
+                }
+            }
+
+            @keyframes fadeInLeft {
+                0% {
+                    opacity: 0;
+                    transform: translateX(0px);
+                }
+
+                50% {
+                    opacity: 0;
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateX(-180px);
+                }
+            }
+
+            @keyframes fadeInRight {
+                0% {
+                    opacity: 1;
+                    transform: translateX(0px);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateX(300px);
+                }
+            }
+
+            .fadeInLeft {
+                -webkit-animation-name: fadeInLeft;
+                animation-name: fadeInLeft;
+            }
+
+            .fadeInRight {
+                -webkit-animation-name: fadeInRight;
+                animation-name: fadeInRight;
+            }
+        }
+
+    </style>
+    <script>
+
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("form");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+        }
+
+    </script>
+
+    {% if mail == 1 %}
+        <div class="alert alert-success" id="success-alert"
+             style="border: solid limegreen;border-radius: 10px; background-color: mediumseagreen; max-width: 50%; font-size: 12px; margin-left: 25%">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> Confirmation mail sent to customer email.
+        </div>
+        <script>
+            $("#success-alert").fadeTo(5000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        </script>
+    {% elif mail == 2 %}
+        <div class="alert alert-danger" id="danger-alert"
+             style="border: solid limegreen;border-radius: 10px">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Failed!</strong> Failed to confirm order.
+        </div>
+        <script>
+            $("#danger-alert").fadeTo(5000, 500).slideUp(500, function () {
+                $("#danger-alert").slideUp(500);
+            });
+        </script>
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-pull-12 layout__box">
+                <div class="layout__boxHeader">
+                    <div class="layout__boxTitle">
+                        {#                        <a href="{% url 'home' %}">#}
+                        {#                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"#}
+                        {#                                 viewBox="0 0 32 32">#}
+                        {#                                <title>arrow-left</title>#}
+                        {#                                <path#}
+                        {#                                        d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z">#}
+                        {#                                </path>#}
+                        {#                            </svg>#}
+                        {#                        </a>#}
+                        <h3>Create Order</h3>
+                    </div>
+                </div>
+
+                <div class="layout__body">
+                    {% if error %}
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <div class="tab" style="margin-left: 5px; padding-bottom: 5px">
+                        <table style="margin-bottom: 5px">
+                            <th>
+                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open"
+                                        style="margin-right: 5px">Jersey
+                                </button>
+                            </th>
+                            {#                            <th style="">#}
+                            {#                                <button class="tablinks" onclick="openCity(event, 'others')">Others</button>#}
+                            {#                            </th>#}
+
+                        </table>
+
+                    </div>
+                    <form id="jersey" class="form" action="" method="POST" autocomplete="off">
+                        {% csrf_token %}
+
+                        <div class="form__group" style="margin-top: 10px">
+                            <label>Customer Name*</label>
+                            {{ form.customer_name }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Email*</label>
+                            {{ form.customer_email }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Mobile*</label>
+                            {{ form.customer_contactnumber }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Address*</label>
+                            {{ form.customer_address }}
+                        </div>
+                        <div class="form__group">
+                            <label>Delivery Address*</label>
+                            {{ form.delivery_address }}
+                        </div>
+                        <label style="color: black; font-size: 15px">Select Jerseys*</label>
+                        <div class="row product-box"
+                             style="border: solid 2px #fc4b0b; border-radius: 10px; max-width: 96%;  margin-left: 0px;">
+                            <div class="container">
+                                {% for p in products %}
+                                    {% if p.product_type == 'Clothing' %}
+                                        <div class="row single_product" style="padding: 5px">
+                                            <div class="col-md-4">
+                                                <div class="custom-control custom-checkbox image-checkbox">
+                                                    <input type="checkbox"
+                                                           class="custom-control-input product{{ forloop.counter }} product-input"
+                                                           id="product{{ forloop.counter }}"
+                                                           value="{{ p.product_id }}" name="product">
+                                                    <label class="custom-control-label"
+                                                           for="product{{ forloop.counter }}">
+                                                        <img src="{{ p.avatar.url }}"
+                                                             alt="Responsive image"
+                                                             class="img-fluid img-thumbnail rounded float-left">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type='number' id='quantity{{ forloop.counter }}'
+                                                       class='product{{ forloop.counter }} product-input quantity form-control animated fadeInLeft'
+                                                       placeholder='quantity'
+                                                       name="quantity">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    {#                                                    <input type='text' id='size{{ forloop.counter }}'#}
+                                                    {#                                                           class='product{{ forloop.counter }} product-input form-control'#}
+                                                    {#                                                           placeholder='size'#}
+                                                    {#                                                           name="size">#}
+                                                    <select class="form-select form-control product{{ forloop.counter }} animated fadeInLeft"
+                                                            aria-label="Default select example"
+                                                            id='size{{ forloop.counter }}' name="size">
+                                                        <option selected value="">Size</option>
+                                                        <option value="M">M- Chest-38" Length-27"</option>
+                                                        <option value="L">L- Chest-40" Length-28"</option>
+                                                        <option value="XL">XL- Chest-42" Length-29"</option>
+                                                        <option value="2XL">2XL- Chest-44" Length-30"</option>
+                                                        <option value="3XL">3XL- Chest-46" Length-31"</option>
+                                                        <option value="4XL">4XL- Chest-48" Length-31"</option>
+                                                        <option value="5XL">5XL- Chest-50" Length-32"</option>
+                                                    </select>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input class="form-check-input product-input"
+                                                               type="radio"
+                                                               name="sleeve_choice{{ forloop.counter }}"
+                                                               id="full_sleeve{{ forloop.counter }}" value="full">
+                                                        <label class="form-check-label product-input" for="full_sleeve"
+                                                               id="full_sleeve{{ forloop.counter }}label">Full
+                                                            Sleeve</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input class="form-check-input product-input"
+                                                               type="radio"
+                                                               name="sleeve_choice{{ forloop.counter }}"
+                                                               id="half_sleeve{{ forloop.counter }}" value="half">
+                                                        <label class="form-check-label product-input" for="half_sleeve"
+                                                               id="half_sleeve{{ forloop.counter }}label">Half
+                                                            Sleeve</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {#                            <div class="row product-div" id="new_product"#}
+                            {#                                 style=" padding: 10px 10px 0px 0px; margin-left: 50px; margin-bottom: 5px; margin-right: -5px">#}
+                            {#                                <div class="row" style="margin-left: -35px; margin-right: 0px">#}
+                            {#                                    <div class="col-sm-11" style="padding-right: 0px">#}
+                            {##}
+                            {#                                        <div class="form__group" *>#}
+                            {#                                            <label>Product Code*</label>#}
+                            {#                            {{ form.product }}#}
+                            {#                                            <div class="product_entry">#}
+                            {#                                                <input required type="search" list="product" placeholder="Enter Code"#}
+                            {#                                                       name='product' class="product_inf" id="product_entry"#}
+                            {#                                                       onfocus="this.value=''" onchange="this.blur();"#}
+                            {#                                                       style="margin-bottom: 5px">#}
+                            {#                                                <datalist name="product" id="product">#}
+                            {#                                                    {% for p in products %}#}
+                            {#                                                        {% if p.product_type == 'Clothing' %}#}
+                            {#                                                            <option value="{{ p.product_id }}">#}
+                            {#                                                        {% endif %}#}
+                            {#                                                    {% endfor %}#}
+                            {#                                                </datalist>#}
+                            {#                                                <div class="dropdown nav-item">#}
+                            {#                                                    <input#}
+                            {#                                                            class="dropdown-toggle form-control live-search-box"#}
+                            {#                                                            id="quicksearch1"#}
+                            {#                                                            data-toggle="dropdown"#}
+                            {#                                                            aria-haspopup="true"#}
+                            {#                                                            aria-expanded="false"#}
+                            {#                                                            placeholder="Search.."#}
+                            {#                                                            style="width: 250px;">#}
+                            {#                                                    <ul class="w-50 dropdown-menu live-search-list"#}
+                            {#                                                        style="background-color: #ffcfa5">#}
+                            {#                                                        {% for p in products %}#}
+                            {#                                                            {% if p.product_type == 'Clothing' %}#}
+                            {#                                                                <li class="dropdown-products" id="{{ p.product_id }}">#}
+                            {#                                                                    <img class="img-thumbnail rounded float-left"#}
+                            {#                                                                         src="{{ p.avatar.url }}"#}
+                            {#                                                                         alt="Responsive image">&nbsp;&nbsp;{{ p.product_name }}#}
+                            {#                                                                </li>#}
+                            {#                                                            {% endif %}#}
+                            {#                                                        {% endfor %}#}
+                            {#                                                    </ul>#}
+                            {#                                                </div>#}
+                            {#                                            </div>#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                </div>#}
+                            {#                                <div class="row" style="margin-left: -35px; margin-right: 0px">#}
+                            {#                                    <div class="col-sm-3" style="padding-right: 0px">#}
+                            {##}
+                            {#                                        <div class="form__group">#}
+                            {#                                            <label>Quantity*</label>#}
+                            {#                                        {{ form.quantity }}#}
+                            {#                                            <input type="number" name="quantity" id="id_quantity" value=1#}
+                            {#                                                   placeholder="Enter Quantity">#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                    <div class="col-sm-7"#}
+                            {#                                         style="padding-left: 25px; padding-right: 0px; margin-left: -10px">#}
+                            {#                                        <div class="form__group">#}
+                            {#                                            <label>Size*</label>#}
+                            {#                                        {{ form.size }}#}
+                            {#                                            <input type="text" name="size" maxlength="200" id="id_size"#}
+                            {#                                                   placeholder="Enter size">#}
+                            {#                                        </div>#}
+                            {#                                    </div>#}
+                            {#                                </div>#}
+                            {#                            </div>#}
+                        </div>
+                        <div style="margin-bottom: 10px">
+                            <button type="button" id="confirm_btn" class="btn btn-success"
+                                    style="border: none; margin-top: 5px; padding: 10px">Confirm
+                            </button>
+                        </div>
+                        <div class="form__group">
+                            <label>Custom Name</label>
+                            {{ form.custom_name }}
+                        </div>
+                        <div class="form__group">
+                            <label>Custom Number</label>
+                            {{ form.custom_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid Amount*</label>
+                            {{ form.paid }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash/Nagad Paid To*</label>
+                            {{ form.paid_to_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash/Nagad No*</label>
+                            {{ form.bkash_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash/Nagad TXN ID*</label>
+                            {{ form.bkash_txn_id }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Facebook</label>
+                            {{ form.customer_fb }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Discord</label>
+                            {{ form.customer_discord }}
+                        </div>
+                        <input type="hidden" id="products_list" name="products_list">
+
+
+                        <div class="form__action" style="margin-right: 2%">
+                            <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
+                            <button class="btn btn--main" id="submit" type="submit" disabled>Submit</button>
+                        </div>
+                    </form>
+
+                    {#                    <form id="others" class="form" action="" method="POST" autocomplete="off">#}
+                    {#                        {% csrf_token %}#}
+                    {##}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Customer Name</label>#}
+                    {#                            {{ form.customer_name }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Customer Mobile</label>#}
+                    {#                            {{ form.customer_contactnumber }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Customer Email</label>#}
+                    {#                            {{ form.customer_email }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Customer Address</label>#}
+                    {#                            {{ form.customer_address }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Delivery Address</label>#}
+                    {#                            {{ form.delivery_address }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Customer Facebook</label>#}
+                    {#                            {{ form.customer_fb }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Customer Discord</label>#}
+                    {#                            {{ form.customer_discord }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Product ID</label>#}
+                    {#                            <input type="search" list="product2" placeholder="Select Product" name='product_other'#}
+                    {#                                   onfocus="this.value=''"#}
+                    {#                                   onchange="this.blur();">#}
+                    {#                            <datalist name="product2" id="product2">#}
+                    {#                                {% for p in products %}#}
+                    {#                                    {% if p.product_type != 'Clothing' %}#}
+                    {#                                        <option value="{{ p.product_id }}">#}
+                    {#                                    {% endif %}#}
+                    {#                                {% endfor %}#}
+                    {#                            </datalist>#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Quantity</label>#}
+                    {#                            {{ form.quantity }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Paid Amount</label>#}
+                    {#                            {{ form.paid }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Paid To</label>#}
+                    {#                            {{ form.money_received_by }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Bkash No</label>#}
+                    {#                            {{ form.bkash_number }}#}
+                    {#                        </div>#}
+                    {#                        <div class="form__group">#}
+                    {#                            <label>Bkash TXN ID</label>#}
+                    {#                            {{ form.bkash_txn_id }}#}
+                    {#                        </div>#}
+                    {##}
+                    {##}
+                    {#                        <div class="form__action" style="margin-right: 2%">#}
+                    {#                            <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>#}
+                    {#                            <button class="btn btn--main" type="submit">Submit</button>#}
+                    {#                        </div>#}
+                    {#                    </form>#}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div>
+    <script>document.getElementById('open').click()</script>
+
+    <script>
+
+        document.getElementById('id_customer_name').setAttribute('placeholder', 'Enter your name')
+        document.getElementById('id_customer_email').setAttribute('placeholder', 'Enter your email')
+        document.getElementById('id_customer_contactnumber').setAttribute('placeholder', 'Enter your mobile number')
+        document.getElementById('id_customer_address').setAttribute('placeholder', 'Enter your address')
+        document.getElementById('id_delivery_address').setAttribute('placeholder', 'Enter delivery address')
+        document.getElementById('id_custom_name').setAttribute('placeholder', 'Enter custom name')
+        document.getElementById('id_custom_number').setAttribute('placeholder', 'Enter custom number')
+        document.getElementById('id_paid').setAttribute('placeholder', 'Enter your advanced paid amount')
+        document.getElementById('id_bkash_number').setAttribute('placeholder', 'Enter your Bkash/Nagad number')
+        document.getElementById('id_bkash_txn_id').setAttribute('placeholder', 'Enter Bkash/Nagad TXN ID')
+        document.getElementById('id_customer_fb').setAttribute('placeholder', 'Enter your facebook link')
+        document.getElementById('id_customer_discord').setAttribute('placeholder', 'Enter your discord id')
+
+        let products_array = []
+
+        let checkboxlist = document.getElementsByClassName('custom-control-input')
+
+        for (let x = 0; x < checkboxlist.length; x++) {
+            checkboxlist[x].addEventListener('change', function () {
+                if (this.checked) {
+                    this.parentElement.parentElement.parentElement.style.border = 'solid white'
+                    this.parentElement.parentElement.parentElement.style.borderRadius = '10px'
+                    let quantity_element = document.getElementById('quantity' + (x + 1).toString())
+                    quantity_element.style.display = 'inline'
+                    let size_element = document.getElementById('size' + (x + 1).toString())
+                    size_element.style.display = 'inline'
+                    let full_sleeve_element = document.getElementById('full_sleeve' + (x + 1).toString())
+                    full_sleeve_element.style.display = 'inline'
+                    let full_sleevelabel_element = document.getElementById('full_sleeve' + (x + 1).toString() + 'label')
+                    full_sleevelabel_element.style.display = 'inline'
+                    let half_sleeve_element = document.getElementById('half_sleeve' + (x + 1).toString())
+                    half_sleeve_element.style.display = 'inline'
+                    let half_sleevelabel_element = document.getElementById('half_sleeve' + (x + 1).toString() + 'label')
+                    half_sleevelabel_element.style.display = 'inline'
+                    this.nextElementSibling.firstElementChild.className = 'img-fluid img-thumbnail animated2 fadeInRight'
+                    this.parentElement.parentElement.nextElementSibling.nextElementSibling.firstElementChild.nextElementSibling.className = 'row animated fadeInLeft'
+                } else {
+                    this.parentElement.parentElement.parentElement.style.border = 'none'
+                    let quantity_element = document.getElementById('quantity' + (x + 1).toString())
+                    quantity_element.style.display = 'none'
+                    let size_element = document.getElementById('size' + (x + 1).toString())
+                    size_element.style.display = 'none'
+                    let sleeve_element = document.getElementById('full_sleeve' + (x + 1).toString())
+                    sleeve_element.style.display = 'none'
+                    let sleevelabel_element = document.getElementById('full_sleeve' + (x + 1).toString() + 'label')
+                    sleevelabel_element.style.display = 'none'
+                    let half_sleeve_element = document.getElementById('half_sleeve' + (x + 1).toString())
+                    half_sleeve_element.style.display = 'none'
+                    let half_sleevelabel_element = document.getElementById('half_sleeve' + (x + 1).toString() + 'label')
+                    half_sleevelabel_element.style.display = 'none'
+                    this.nextElementSibling.firstElementChild.className = 'img-fluid img-thumbnail animated2'
+                    this.parentElement.parentElement.nextElementSibling.nextElementSibling.firstElementChild.nextElementSibling.className = 'row'
+
+                }
+            })
+        }
+
+        let confirm_btn = document.getElementById('confirm_btn')
+
+        confirm_btn.addEventListener('click', function () {
+            let empty_flag = false
+            let products = document.getElementsByName('product')
+            count_check = 0
+            for (let k = 0; k < products.length; k++) {
+                if (products[k].checked) {
+                    count_check = 1
+                }
+            }
+            if (count_check === 0) {
+                empty_flag = true
+            }
+
+            let quantity = document.getElementsByName('quantity')
+            for (let k = 0; k < quantity.length; k++) {
+                if (!(quantity[k].style.display === '' || quantity[k].style.display === 'none') && quantity[k].value === '') {
+                    empty_flag = true
+                }
+            }
+
+
+            let size = document.getElementsByName('size')
+            for (let k = 0; k < size.length; k++) {
+                if (!(size[k].style.display !== '' || size[k].style.display !== 'none') && size[k].value === '') {
+                    empty_flag = true
+                } else if (!(size[k].style.display === '' || size[k].style.display === 'none') && size[k].value === '') {
+                    empty_flag = true
+                }
+            }
+
+            if (empty_flag) {
+                alert('Please provide all information for selected items')
+                {#empty_flag = false#}
+            } else {
+                let items_list = document.getElementsByClassName('custom-control-input')
+                for (let i = 0; i < items_list.length; i++) {
+                    let item_info = document.getElementsByClassName('product' + i.toString())
+                    let item_obj = {}
+                    for (let j = 0; j < item_info.length; j++) {
+                        if (item_info[j].value !== '') {
+                            if (item_info[j].name === 'product') {
+                                if (item_info[j].checked) {
+                                    item_obj[item_info[j].name] = item_info[j].value
+                                    item_info[j].disabled = true
+                                } else {
+                                    item_info[j].disabled = true
+                                }
+
+                            } else {
+                                if (!("sleeve" in item_obj)) {
+                                    let radio = document.querySelectorAll('input[name^=sleeve_choice' + i.toString() + ']')
+                                    radio.forEach(function (sleeve) {
+                                        if (sleeve.checked) {
+                                            item_obj['sleeve'] = sleeve.value
+                                            sleeve.disabled = true
+                                        } else {
+                                            sleeve.disabled = true
+                                        }
+                                    })
+                                }
+                                if (item_info[j].name === 'quantity') {
+                                    if (item_info[j].parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.checked) {
+                                        item_obj[item_info[j].name] = item_info[j].value
+                                        item_info[j].disabled = true
+                                    }
+                                } else if (item_info[j].name === 'size') {
+                                    if (item_info[j].parentElement.parentElement.parentElement.firstElementChild.firstElementChild.firstElementChild.checked) {
+                                        item_obj[item_info[j].name] = item_info[j].value
+                                        item_info[j].disabled = true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (Object.keys(item_obj).length > 0) {
+                        products_array.push(item_obj)
+                    }
+
+                }
+            }
+            if (!empty_flag) {
+                for (let k = 0; k < products.length; k++) {
+                    products[k].disabled = true
+                }
+                confirm_btn.disabled = true
+                document.getElementById('submit').disabled = false
+            }
+            console.log(products_array)
+        })
+
+
+        document.getElementById('submit').addEventListener('click', () => {
+            document.getElementById('products_list').value = JSON.stringify(products_array)
+        })
+
+
+        $(document).ready(function () {
+            $("#jersey").on("submit", function () {
+                $(".loader-wrapper").fadeIn();
+            });//submit
+        });//document ready
+
+
+    </script>
+
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+
+
 urlpatterns = [
     path('login/', views.loginpage, name='login'),
     path('logout/', views.logoutuser, name='logout'),
@@ -21,11 +23,15 @@ urlpatterns = [
     path('activity/', views.activity, name='activity'),
     path('create_lobby/', views.create_lobby, name='create-lobby'),
     path('create_order/', views.create_order, name='create-order'),
+    path('create_order_customer/', views.create_order_customer, name='create-order-customer'),
     path('create_product/', views.create_product, name='create-product'),
     path('create_task/', views.create_task, name='create-task'),
     path('update_lobby/<str:pk>/', views.update_lobby, name='update-lobby'),
     path('delete_lobby/<str:pk>/', views.deleteLobby, name='delete-lobby'),
     path('delete_post/<str:pk>/', views.deletePost, name='delete-post'),
+
+    path('order_success/', views.success, name='success'),
+    path('welcometoseikai/', views.welcome, name='welcome'),
 
 
     path('coinshophome', views.coinShopHome, name='coinshophome'),

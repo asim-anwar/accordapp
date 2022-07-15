@@ -85,9 +85,7 @@
 
     .form-control {
         background-color: #ffcfa5;
-    {#padding: 2rem;#} padding-right: 30rem;
-        padding-top: 25px;
-        padding-bottom: 30px;
+    {#padding: 2rem; padding-right: 30rem;#}{#        padding-top: 25px;#}{#        padding-bottom: 30px;#}
     }
 </style>
 
@@ -95,12 +93,20 @@
     <div class="container-fluid">
         <div class="col-lg-4">
             <div class="navbar-header">
-                {% if page != 'menu' %}
-                    <a href="{% url 'home' %}">
-                        <img src={% static 'images/nav_LOGO.png' %}>
+                {% if page == 'menu' %}'
+                    <img class="img-fluid" src={% static 'images/nav_LOGO.png' %}>
+                {% elif page == 'success' %}
+                    <a href="{% url 'welcome' %}">
+                        <img class="img-fluid" src={% static 'images/nav_LOGO.png' %}>
+                    </a>
+                {% elif page == 'create-order-customer' %}
+                    <a href="{% url 'welcome' %}">
+                        <img class="img-fluid" src={% static 'images/nav_LOGO.png' %}>
                     </a>
                 {% else %}
-                        <img src={% static 'images/nav_LOGO.png' %}>
+                    <a href="{% url 'home' %}">
+                        <img class="img-fluid img-responsive" src={% static 'images/nav_LOGO.png' %}>
+                    </a>
                 {% endif %}
                 {#                <a class="navbar-brand" href="{% url 'home' %}" style="color: #ffcfa5">seikai</a>#}
             </div>

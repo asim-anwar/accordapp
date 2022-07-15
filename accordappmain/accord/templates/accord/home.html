@@ -29,6 +29,17 @@
             -webkit-appearance: searchfield-cancel-button;
         }
 
+        .loader-wrapper {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: antiquewhite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
         .custom {
             padding-top: 30rem;
@@ -66,41 +77,43 @@
 
 
     <div class="container">
-    <div class="row" style="margin-right: -100px">
-        <div class="col-lg-2 col-sm-auto pages">
-            {% include 'accord/topics_component.html' %}
-        </div>
-        {#            <div class="col-lg-1">#}
-        {##}
-        {#            </div>#}
-        <div class="col-lg-10 col-sm-auto">
-            <div class="roomList">
-                <div class="mobile-menu">
-                    <div class="mobile-menuItems">
-                        <a class="btn btn--main btn--pill" href='http://103.139.235.239:3000/pages/'>Browse
-                            Pages</a>
+        <div class="row">
+            <div class="col-lg-2 col-sm-auto pages">
+                {% include 'accord/topics_component.html' %}
+            </div>
+            {#            <div class="col-lg-1">#}
+            {##}
+            {#            </div>#}
+            <div class="col-lg-10 col-sm-auto">
+                <div class="roomList">
+                    <div class="mobile-menu">
+                        <div class="mobile-menuItems">
+                            <a class="btn btn--main btn--pill" href='http://103.139.235.239:3000/pages/'>Browse
+                                Pages</a>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    {% if messages %}
-                        {% for message in messages %}
-                            {% if message.tags == 'success' %}
-                                <div class="alert alert-success" role="alert">
-                                <button type="button" class="close" data-dismiss="alert"
-                                        aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <strong>Success!</strong> {{ message }}
-                                </div>
-                            {% elif message.tags == 'error' %}
-                                <div class="alert alert-danger" role="alert" style="background-color: red; color: whitesmoke; border: 1px solid whitesmoke; border-radius: 10px">
-                                <button type="button" class="close" data-dismiss="alert" style="color: whitesmoke"
-                                        aria-label="Close"><span
-                                        aria-hidden="true" style="color: whitesmoke">&times;</span></button>
-                                <strong>Error!</strong> {{ message }}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
+                    <div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.tags == 'success' %}
+                                    <div class="alert alert-success" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                                aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                        <strong>Success!</strong> {{ message }}
+                                    </div>
+                                {% elif message.tags == 'error' %}
+                                    <div class="alert alert-danger" role="alert"
+                                         style="background-color: red; color: whitesmoke; border: 1px solid whitesmoke; border-radius: 10px">
+                                        <button type="button" class="close" data-dismiss="alert"
+                                                style="color: whitesmoke"
+                                                aria-label="Close"><span
+                                                aria-hidden="true" style="color: whitesmoke">&times;</span></button>
+                                        <strong>Error!</strong> {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </div>
                     <div class="roomList__header">
                         <div>
@@ -152,7 +165,7 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <form action="" class="" method="POST" autocomplete="off">
+                    <form action="" class="" method="POST" autocomplete="off" id="status">
                         {% csrf_token %}
                         {#            <h1>Update Availability</h1>#}
 
@@ -192,6 +205,17 @@
             </div>
         </div>
     </div>
+    <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#status").on("submit", function () {
+                $(".loader-wrapper").fadeIn();
+            });//submit
+        });
+    </script>
 
     <script>
         document.getElementById('close_btn').addEventListener('click', function () {
@@ -213,7 +237,11 @@
             } else if (count === 1) {
                 document.getElementById('submit').type = 'submit'
             }
+            document.getElementById('myModal').modal('hide');
         })
+        $('#submit').click(function () {
+            $('#myModal').modal('hide');
+        });
 
     </script>
 
@@ -241,4 +269,3 @@
 
 
 {% endblock content %}
-

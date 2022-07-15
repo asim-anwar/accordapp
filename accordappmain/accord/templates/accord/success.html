@@ -1,0 +1,130 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffcfa5;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #ed6a4c;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        input[type=search]::-webkit-search-cancel-button {
+            -webkit-appearance: searchfield-cancel-button;
+        }
+
+
+        @media (min-width: 1200px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            {#max-width: 400px;#}
+        }
+
+        .container img {
+            width: 100%;
+            height: auto;
+        }
+
+        .container .btn {
+            position: absolute;
+            top: 60%;
+            left: 72%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            {#background-color: #555;#}
+            color: #ed6a4c;
+            font-size: 20px;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        #success_mobile {
+                margin-top: -20%;
+            }
+
+        @media (max-width: 550px) {
+            .container .btn {
+                font-size: 15px;
+                padding: 5px 10px;
+                left: 50%;
+                top: 80%
+            }
+
+            #success_bigscrn {
+                max-height: 0;
+            }
+        }
+
+        @media (min-width: 1200px) {
+
+            .container .btn {
+                padding: 5px 10px;
+            }
+
+            #success_mobile {
+                max-height: 0;
+            }
+        }
+
+    </style>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <img id="success_bigscrn" src="{% static 'images/success_image.png' %}" alt="Resonsive image" class="img-fluid">
+                <img id="success_mobile" src="{% static 'images/mobile.png' %}" alt="Resonsive image" class="img-fluid" style="">
+                <a href="http://127.0.0.1:8000/create_order_customer/">
+                    <button class="btn btn-primary" style="background-color: #ffcfa5">Buy More</button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+
+
+{% endblock content %}

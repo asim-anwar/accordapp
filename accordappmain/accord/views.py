@@ -62,6 +62,7 @@ def logoutuser(request):
     return redirect('home')
 
 
+@login_required(login_url='login')
 def signup(request):
     page = 'signup'
     if request.user.is_authenticated:
@@ -346,6 +347,74 @@ def create_order(request):
     return render(request, 'accord/create_update_order.html', context)
 
 
+def create_order_customer(request):
+    page = 'create-order-customer'
+    form = OrderForm()
+    error = ''
+    mail = ''
+    products = Product.objects.filter(available='Yes', product_type='Clothing')
+    # topics = Topic.objects.all()
+
+    try:
+        if request.method == 'POST':
+            product_list = request.POST.get('products_list')
+            product_list = json.loads(product_list)
+
+            # Price = Product.objects.get(product_id=request.POST.get('product')).price
+            # product_id = Product.objects.get(product_id=request.POST.get('product'))
+            # quantity = request.POST.get('quantity')
+            form = OrderFormPOST(request.POST)
+            order_id_gen = 'OD' + str(random.randint(100000, 999999))
+            while Order.objects.filter(order_id=order_id_gen).exists():
+                order_id_gen = 'OD' + str(random.randint(100000, 999999))
+            if form.is_valid():
+                order = form.save(commit=False)
+                # order.created_by = request.user
+                order.created_date = datetime.datetime.now()
+                order.order_id = order_id_gen
+                # order.total_price =
+                # order.product_id = product_id.id
+                total = 0
+                ordered_products = []
+
+                for selected_product in product_list:
+                    form2 = OrderProductForm(selected_product)
+                    if form2.is_valid():
+                        product_entry = form2.save(commit=False)
+                        product_entry.product_id = Product.objects.get(product_id=selected_product['product']).id
+                        total += Product.objects.get(product_id=selected_product['product']).price * int(
+                            selected_product['quantity'])
+                        order.total_price = total
+                        order.save()
+                        product_entry.order_id = order.id
+                        product_entry.save()
+                    else:
+                        error = 'Error while taking order form: ' + str(form2.errors)
+                orders = Order_Product.objects.filter(order_id=order.id)
+                for od in orders:
+                    ordered_products.append(od)
+                context = {'page': page, 'order': order, 'products': orders, 'total': total,
+                           'due': str(total - int(request.POST.get(
+                               'paid')))}
+                mail = EmailVerification(request.POST, order, ordered_products, context)
+                print(mail)
+                messages.success(request, 'Order Created Successfully.')
+                return redirect('success')
+                # if mail.startswith('C'):
+                #     mail = 1
+                # else:
+                #     mail = 2
+            else:
+                error = 'Error while taking order! Please provide valid inputs. '
+
+    except Exception as e:
+        error = 'Error while taking order!'
+        messages.error(request, 'Failed to create order.')
+
+    context = {'page': page, 'form': form, 'error': error, 'products': products, 'mail': mail}
+    return render(request, 'accord/create_order_customer.html', context)
+
+
 def EmailVerification(payload, order, ordered_products, context):
     try:
         product_info = ''
@@ -418,11 +487,11 @@ def create_product(request):
     if request.method == 'POST':
         # Price = Product.objects.get(id=request.POST.get('product')).price
         # quantity = request.POST.get('quantity')
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, request.FILES)
         ptype = request.POST.get('product_type')
         pshort = 'FG' if ptype == 'Figurines' else 'KCN' if ptype == 'Keychains' else 'KC' if ptype == 'Keycaps' else 'SW' if ptype == 'Swords' else 'HP' if ptype == 'Headphone Pouch' else 'MP' if ptype == 'Mousepads' else 'JS' if ptype == 'Clothing' else 'HL' if ptype == 'Heirloom' else ''
         if form.is_valid():
-            product = form.save(commit=False)
+            product = form.save()
             product.created_by = request.user
             product.created_date = datetime.datetime.now()
             product.product_type = ptype
@@ -432,6 +501,7 @@ def create_product(request):
             product.save()
         else:
             error = form.errors
+            print(error)
 
         # Order.objects.create(
         #     customer_name=request.POST.get('customer_name'),
@@ -684,6 +754,26 @@ def pages(request):
 def activity(request):
     posts = Post.objects.all()
     return render(request, 'accord/activity.html', {'posts': posts})
+
+
+def success(request):
+    page = 'success'
+
+    context = {
+        'page': page
+    }
+
+    return render(request, 'accord/success.html', context)
+
+
+def welcome(request):
+    page = 'welcome'
+
+    context = {
+        'page': page
+    }
+
+    return render(request, 'accord/welcome_seikai.html', context)
 
 
 @login_required(login_url='login')

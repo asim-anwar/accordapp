@@ -425,8 +425,8 @@ a {
 /*========== Layout Box ==========*/
 
 .layout__box {
-  width: 90%;
-  max-width: 48rem;
+  width: 100%;
+  max-width: 80rem;
   min-height: 40rem;
   position: absolute;
   top: 50%;

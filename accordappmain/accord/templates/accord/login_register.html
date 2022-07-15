@@ -2,6 +2,21 @@
 
 {% block content %}
     <style>
+
+        .layout__box {
+            width: 100%;
+            max-width: 48rem;
+            min-height: 40rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -46%);
+            background-color: var(--color-dark);
+            border-radius: 1rem;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
         .alert {
             padding: 10px;
             background-color: #f44336; /* Red */
@@ -71,14 +86,14 @@
                             </button>
                         </form>
 
-                        <div class="auth__action">
-                            <p>Haven't signed up yet?</p>
-                            <a href="{% url 'signup' %}" class="btn btn--link">Sign Up</a>
-                        </div>
+{#                        <div class="auth__action">#}
+{#                            <p>Haven't signed up yet?</p>#}
+{#                            <a href="{% url 'signup' %}" class="btn btn--link">Sign Up</a>#}
+{#                        </div>#}
                         {% if error %}
                             <div class="alert">
                                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                {{ error }}
+                                {{ message }}
                             </div>
                         {% endif %}
                     </div>
@@ -129,7 +144,7 @@
                         {% if error %}
                             <div class="alert">
                                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                                {{ error }}
+                                {{ message }}
                             </div>
                         {% endif %}
                     </div>
