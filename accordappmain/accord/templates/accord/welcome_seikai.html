@@ -43,12 +43,6 @@
             width: 100%;
         }
 
-        @media (max-width: 550px) {
-            nav {
-                margin-top: 20%;
-            }
-        }
-
         {#button hover#}
         a {
             text-decoration: none;
@@ -117,11 +111,33 @@
         nav ul li span:nth-child(4) {
             --n: 4;
         }
+
+        @media (max-height: 800px) {
+            nav {
+                margin-top: 15%;
+                margin-left: -17%;
+            }
+
+            img {
+                margin-left: -15%;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            nav {
+                margin-top: 20%;
+            }
+
+            nav ul li {
+                font-size: 25px;
+            }
+        }
+
     </style>
 </head>
 <body>
 <div class="container" style="margin-left: 15%">
-{#    <h1 style="color: whitesmoke; font-family: BillyanaPersonalUseOnly; font-size: 500px">seikai</h1>#}
+    {#    <h1 style="color: whitesmoke; font-family: BillyanaPersonalUseOnly; font-size: 500px">seikai</h1>#}
     <img class="img-fluid" alt="Responsive image" src={% static 'images/NavLogo2.png' %}>
 </div>
 <div class="container btn" style="margin-left: 15%; margin-top:17%">

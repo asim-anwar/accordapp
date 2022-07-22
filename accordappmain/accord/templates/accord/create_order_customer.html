@@ -261,6 +261,7 @@
 
             .form-select {
                 max-width: 95%;
+                font-family: B;
             }
 
             .quantity {
@@ -519,7 +520,7 @@
                                                                id="full_sleeve{{ forloop.counter }}" value="full">
                                                         <label class="form-check-label product-input" for="full_sleeve"
                                                                id="full_sleeve{{ forloop.counter }}label">Full
-                                                            Sleeve</label>
+                                                            Sleeve ({{ p.full_sleeve_price }}BDT)</label>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <input class="form-check-input product-input"
@@ -528,7 +529,7 @@
                                                                id="half_sleeve{{ forloop.counter }}" value="half">
                                                         <label class="form-check-label product-input" for="half_sleeve"
                                                                id="half_sleeve{{ forloop.counter }}label">Half
-                                                            Sleeve</label>
+                                                            Sleeve ({{ p.half_sleeve_price }}BDT)</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -826,7 +827,8 @@
                 {#empty_flag = false#}
             } else {
                 let items_list = document.getElementsByClassName('custom-control-input')
-                for (let i = 0; i < items_list.length; i++) {
+                console.log(items_list.length)
+                for (let i = 1; i <= items_list.length; i++) {
                     let item_info = document.getElementsByClassName('product' + i.toString())
                     let item_obj = {}
                     for (let j = 0; j < item_info.length; j++) {

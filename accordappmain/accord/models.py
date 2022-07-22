@@ -60,7 +60,8 @@ class Pages(models.Model):
 class Product(models.Model):
     product_name = models.CharField(max_length=200, null=True, blank=False)
     product_details = models.TextField(null=True, blank=False)
-    price = models.IntegerField(null=True, blank=False)
+    full_sleeve_price = models.IntegerField(null=True, blank=False)
+    half_sleeve_price = models.IntegerField(null=True, blank=False)
     preorder = models.IntegerField(null=True, blank=True)
     product_id = models.CharField(max_length=200, null=True, blank=True)
     product_type = models.CharField(max_length=200, null=True, blank=False)

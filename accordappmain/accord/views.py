@@ -152,7 +152,8 @@ def products(request):
     if q != '':
         products = products.filter(
             Q(product_name__icontains=q) |
-            Q(price__contains=q) |
+            Q(full_sleeve_price__contains=q) |
+            Q(half_sleeve_price__contains=q) |
             Q(product_type__contains=q) |
             Q(product_id__contains=q) |
             Q(available__contains=q)).order_by('-available')
@@ -382,8 +383,12 @@ def create_order_customer(request):
                     if form2.is_valid():
                         product_entry = form2.save(commit=False)
                         product_entry.product_id = Product.objects.get(product_id=selected_product['product']).id
-                        total += Product.objects.get(product_id=selected_product['product']).price * int(
-                            selected_product['quantity'])
+                        if selected_product['sleeve'] == 'full':
+                            total += Product.objects.get(product_id=selected_product['product']).full_sleeve_price * int(
+                                selected_product['quantity'])
+                        elif selected_product['sleeve'] == 'half':
+                            total += Product.objects.get(product_id=selected_product['product']).half_sleeve_price * int(
+                                selected_product['quantity'])
                         order.total_price = total
                         order.save()
                         product_entry.order_id = order.id
@@ -432,13 +437,13 @@ def EmailVerification(payload, order, ordered_products, context):
                 product_info += '\nProduct Name: ' + product.product.product_name + '\nSize: ' + str(
                     product.size) + '\nQuantity: ' + str(
                     product.quantity) + '\n ----------------------------------------------'
-            else:
-                mail_order_info = 'Customer Name: ' + payload.get(
-                    'customer_name') + '\nDelivery Address: ' + payload.get(
-                    'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
-                    'quantity') + '\nPaid Amount: ' + payload.get(
-                    'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
-                    'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
+            # else:
+            #     mail_order_info = 'Customer Name: ' + payload.get(
+            #         'customer_name') + '\nDelivery Address: ' + payload.get(
+            #         'delivery_address') + '\nProduct Name: ' + product.product_name + '\nQuantity: ' + payload.get(
+            #         'quantity') + '\nPaid Amount: ' + payload.get(
+            #         'paid') + '\nDue Payment: ' + str((product.price * int(payload.get('quantity'))) - int(payload.get(
+            #         'paid'))) + '\nBkash Number: ' + payload.get('bkash_number')
         facebook = 'https://www.facebook.com/seikai.bd'
         discord = 'https://discord.gg/wbYsKeXzUr'
         mail_order_info = mail_order_info_1 + product_info + mail_order_info_2
@@ -495,7 +500,7 @@ def create_product(request):
             product.created_by = request.user
             product.created_date = datetime.datetime.now()
             product.product_type = ptype
-            product.preorder = int(request.POST.get('price')) * (30 / 100)
+            # product.preorder = int(request.POST.get('price')) * (30 / 100)
             product.product_id = pshort + str(random.randint(100000, 999999))
             product.available = request.POST.get('available')
             product.save()

@@ -103,8 +103,9 @@
             <th>Product ID</th>
             <th>Product Name</th>
             <th>Product Details</th>
-            <th>Price</th>
-            <th>Preorder</th>
+            <th>Price(Full Slv)</th>
+            <th>Price(Half Slv)</th>
+{#            <th>Preorder</th>#}
             <th>Product Type</th>
             <th>Product Image</th>
             <th>Availability</th>
@@ -132,12 +133,15 @@
                 </td>
 
                 <td>
-                    <span id="price">{{ product.price }}</span>
+                    <span id="price">{{ product.full_sleeve_price }}</span>
                 </td>
                 <td>
-
-                    <span id="preorder">{{ product.preorder }}</span>
+                    <span id="price">{{ product.half_sleeve_price }}</span>
                 </td>
+{#                <td>#}
+{##}
+{#                    <span id="preorder">{{ product.preorder }}</span>#}
+{#                </td>#}
                 <td>
                     <span>{{ product.product_type }}</span>
                 </td>
