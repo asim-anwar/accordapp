@@ -13,7 +13,12 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import django_heroku
+#import django_heroku
+#initialise environment variables
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,11 +29,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%k@^q-jo@qlugci%24jei_6qixp8$=e)852bp=71&m#kc%9o+h'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = True
+#DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["103.139.235.239"]
 # ALLOWED_HOSTS = ['ad45-182-163-112-194.ngrok.io']
 
 
@@ -43,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accord.apps.AccordConfig',
     # 'corsheaders',
-    'rest_framework',
+#    'rest_framework',
     'accordapp',
     # 'api',
 ]
@@ -96,7 +101,7 @@ WSGI_APPLICATION = 'accordapp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'accordapp',
+        'NAME': 'seikai',
         'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': 'admin',
@@ -141,13 +146,23 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/images/'
+MEDIA_URL = 'static/images/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
 MEDIA_ROOT = BASE_DIR / 'static/images'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+
+# Customer Email Confirmation variables
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HSOT_USER')
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -158,4 +173,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = True
 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
