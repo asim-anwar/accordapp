@@ -2,79 +2,119 @@
 
 {% block content %}
 
-    <main class="create-room layout">
-        <div class="container">
-            <div class="layout__box">
-                <div class="layout__boxHeader">
-                    <div class="layout__boxTitle">
-                        <a href="{% url 'tasks' %}">
-                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                 viewBox="0 0 32 32">
-                                <title>arrow-left</title>
-                                <path
-                                        d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z">
-                                </path>
-                            </svg>
-                        </a>
-                        <h3>Add Task</h3>
-                    </div>
-                </div>
+    <style>
+        .alert {
+            padding: 10px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+            margin-top: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
 
-                <div class="layout__body">
-                    <form class="form" action="" method="POST">
-                        {% csrf_token %}
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-                        <div class="form__group">
-                            <label>Task Details</label>
-                            {{ form.task_details }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
-                        </div>
-                        <div class="form__group">
-                            <label>Assign To</label>
-                            <input required list="assigned_to" placeholder="Select Employee" name='assigned_to'>
-                            <datalist name="assigned_to" id="assigned_to">
-                                {#                                <option value="">Select Product</option>#}
-                                {% for u in users %}
-                                    <option value="{{ u.username }}">
-                                {% endfor %}
-                            </datalist>
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
-                        </div>
-                        <div class="form__group">
-                            <label>Deadline</label>
-                            {{ form.deadline_date }}
-                            {#                            {{ form.quantity }}#}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
-                        </div>
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
 
-                        <div class="form__group">
-                            <label>Remarks</label>
-                            {{ form.remarks }}
-                            {#                            {{ form.quantity }}#}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
-                        </div>
-
-                        <!--            <div class="form__group">-->
-                        <!--              <label for="room_topic">Topic</label>-->
-                        <!--              <input required type="text" name="topic" id="room_topic" list="topic-list" />-->
-                        <!--              <datalist id="topic-list">-->
-                        <!--                <select id="room_topic">-->
-                        <!--                  <option value="">Select your topic</option>-->
-                        <!--                  <option value="Python">Python</option>-->
-                        <!--                  <option value="Django">Django</option>-->
-                        <!--                </select>-->
-                        <!--              </datalist>-->
-
-                        <!--            </div>-->
+        .layout__box {
+        {#position: absolute;#}{#transform: translate(-50%, -46%);#} margin-top: 5rem;
+            background-color: var(--color-dark);
+            border-radius: 1rem;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+    </style>
 
 
-                        <div class="form__action">
-                            <a class="btn btn--dark" href="{% url 'tasks' %}">Cancel</a>
-                            <button class="btn btn--main" type="submit">Submit</button>
-                        </div>
-                    </form>
+    <div class="container">
+        <div class="layout__box">
+            <div class="layout__boxHeader">
+                <div class="layout__boxTitle">
+                    <a href="{% url 'tasks' %}">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                             viewBox="0 0 32 32">
+                            <title>arrow-left</title>
+                            <path
+                                    d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z">
+                            </path>
+                        </svg>
+                    </a>
+                    <h3>Add Task</h3>
                 </div>
             </div>
+
+            <div class="layout__body">
+                {% if error %}
+                    <div class="alert">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        {{ error }}
+                    </div>
+                {% endif %}
+                <form class="form" action="" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form__group">
+                        <label>Task Details</label>
+                        {{ form.task_details }}
+                    </div>
+                    <div class="form__group">
+                        <label>Assign To</label>
+                        <input required list="assigned_to" id="options" placeholder="Select Employee" name='assigned_to'
+                               autocomplete="off" onfocus="this.value=''" onchange="this.blur();">
+                        <datalist name="assigned_to" id="assigned_to">
+                            {% for u in users %}
+                                <option class="option" value="{{ u.username }}">
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="form__group">
+                        <label>Deadline</label>
+                        {{ form.deadline_date }}
+                    </div>
+
+                    <div class="form__group">
+                        <label>Remarks</label>
+                        {{ form.remarks }}
+                    </div>
+
+                    <div class="form__action">
+                        <a class="btn btn--dark" href="{% url 'tasks' %}">Cancel</a>
+                        <button class="btn btn--main" id="submit" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </main>
+    </div>
+
+    <script>
+        let options = document.getElementsByClassName('option')
+        let selected = document.getElementById('options')
+        let count = 0
+
+        document.getElementById('submit').addEventListener('click', function () {
+            for (let i = 0; i < options.length; i++) {
+                if (selected.value === options[i].value) {
+                    count += 1
+                }
+            }
+            if (count === 0 && selected.value !== '') {
+                alert('Invalid User Assigned')
+                location.reload()
+            }
+        })
+    </script>
+
 {% endblock %}

@@ -26,9 +26,38 @@ class UserForm(ModelForm):
 
 
 class OrderForm(forms.ModelForm):
+    # PAYMENT_CHOICES = [
+    #     ('', 'Select Bkash/Nagad number you paid to'),
+    #     (7, '01797407811'),
+    #     (4, '01960008530'),
+    #     (3, '01309956343'),
+    #     (5, '01609212434'),
+    #     (6, '01941171107')
+    # ]
+    # money_received_by = forms.IntegerField(label='Enter Payment to number', widget=forms.Select(choices=PAYMENT_CHOICES))
+
     class Meta:
         model = Order
-        fields = ['product', 'customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        fields = '__all__'
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date']
+
+
+class OrderFormRetrieve(forms.ModelForm):
+    class Meta:
+        model = Order
+        # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        fields = '__all__'
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'total_price', 'status', 'quantity',
+                   'size']
+
+
+class OrderFormPOST(forms.ModelForm):
+    class Meta:
+        model = Order
+        # fields = ['customer_name', 'customer_contactnumber', 'customer_address', 'quantity', 'total_price']
+        fields = '__all__'
+        exclude = ['created_by', 'created_date', 'updated_by', 'updated_date', 'product', 'order_id']
 
 
 class ProductForm(ModelForm):
@@ -36,6 +65,7 @@ class ProductForm(ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'Enter Product Name'}))
     product_details = forms.CharField(
         widget=forms.Textarea(attrs={'placeholder': 'Enter Product Details'}))
+
     class Meta:
         model = Product
         fields = '__all__'
@@ -59,3 +89,9 @@ class TaskForm(ModelForm):
         widgets = {
             'deadline_date': DateInput(),
         }
+
+
+class OrderProductForm(ModelForm):
+    class Meta:
+        model = Order_Product
+        fields = ['quantity', 'size', 'sleeve']

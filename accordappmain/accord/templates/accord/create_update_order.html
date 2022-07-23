@@ -1,37 +1,178 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    {#    <script>#}
-    {#                    $(function () {#}
-    {#                        $("id_product").select2();#}
-    {#                    });#}
-    {#                </script>#}
+    <style>
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffcfa5;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #565656;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: black;
+        }
+
+        a:hover {
+            text-decoration: none;
+            color: #ffcfa5;
+        }
+
+
+        .layout__box {
+        {#position: absolute;#}{#transform: translate(-50%, -46%);#} margin-top: 5rem;
+            background-color: var(--color-dark);
+            border-radius: 1rem;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-height: 730px;
+        }
+
+        .layout__body {
+            min-height: 40rem;
+            max-height: 65rem;
+            margin: 3rem;
+            overflow: auto;
+            max-height: 600px;
+        }
+
+        .form__group {
+            margin-bottom: 2rem;
+            margin-right: -10px;
+            width: 98%;
+        }
+
+        {#.product {#}
+        {#    margin-bottom: 2rem;#}
+        {#    margin-right: 2px;#}
+        {#    width: 98%;#}
+        {
+        #}#}
+
+        .form {
+            animation: fadeEffect 1s; /* Fading effect takes 1 second */
+        }
+
+        /* Go from zero to full opacity */
+        @keyframes fadeEffect {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .tablinks {
+            color: #ed6a4c;
+            font-size: 15px;
+            font-weight: normal;
+            padding: 5px;
+            background: antiquewhite;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .tablinks.active {
+            color: #ed6a4c;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 7px;
+            background: antiquewhite;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.3)
+        }
+
+        .alert {
+            padding: 10px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+            margin-top: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+            color: black;
+        }
+    </style>
     <script>
-        $(function () {
-            $("id_product").select2();
-        });
-        $(document).ready(function () {
 
-            // Initialize select2
-            $("#selUser").select2();
+        function openCity(evt, cityName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
 
-            // Read selected option
-            $('#but_read').click(function () {
-                var username = $('#selUser option:selected').text();
-                var userid = $('#selUser').val();
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("form");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
 
-                $('#result').html("id : " + userid + ", name : " + username);
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
 
-            });
-        });
-        $(".jSelectbox").select2({
-            containerCssClass: "error",
-            dropdownCssClass: "js-example-basic-single"
-        });
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+        }
+
     </script>
-    <main class="create-room layout">
-        <div class="container">
-            <div class="layout__box">
+
+    {% if mail == 1 %}
+        <div class="alert alert-success" id="success-alert"
+             style="border: solid limegreen;border-radius: 10px; background-color: mediumseagreen; max-width: 50%; font-size: 12px; margin-left: 25%">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> Confirmation mail sent to customer email.
+        </div>
+        <script>
+            $("#success-alert").fadeTo(5000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
+        </script>
+    {% elif mail == 2 %}
+        <div class="alert alert-danger" id="danger-alert"
+             style="border: solid limegreen;border-radius: 10px">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Failed!</strong> Failed to confirm order.
+        </div>
+        <script>
+            $("#danger-alert").fadeTo(5000, 500).slideUp(500, function () {
+                $("#danger-alert").slideUp(500);
+            });
+        </script>
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-pull-12 layout__box">
                 <div class="layout__boxHeader">
                     <div class="layout__boxTitle">
                         <a href="{% url 'home' %}">
@@ -48,67 +189,207 @@
                 </div>
 
                 <div class="layout__body">
-                    <form class="form" action="" method="POST">
+                    {% if error %}
+                        <div class="alert">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <div class="tab" style="margin-left: 5px; padding-bottom: 5px">
+                        <table style="margin-bottom: 5px">
+                            <th>
+                                <button class="tablinks" onclick="openCity(event, 'jersey')" id="open"
+                                        style="margin-right: 5px">Jersey
+                                </button>
+                            </th>
+                            <th style="">
+                                <button class="tablinks" onclick="openCity(event, 'others')">Others</button>
+                            </th>
+
+                        </table>
+
+                    </div>
+                    <form id="jersey" class="form" action="" method="POST" autocomplete="off">
                         {% csrf_token %}
 
                         <div class="form__group">
                             <label>Customer Name</label>
                             {{ form.customer_name }}
-                            {#              <input required type="text" value="{{lobby.topic.name}}" name="topic" list="topic-list">#}
-                            {#              <datalist id="topic-list">#}
-                            {#                <select id="lobby-topic">#}
-                            {#                  {% for topic in topics %}#}
-                            {#                  <option value="{{topic.name}}">{{topic.name}}</option>#}
-                            {#                  {% endfor %}#}
-                            {#                </select>#}
-
-                            {#              </datalist>#}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Email</label>
+                            {{ form.customer_email }}
                         </div>
                         <div class="form__group">
                             <label>Customer Mobile</label>
                             {{ form.customer_contactnumber }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
                         </div>
                         <div class="form__group">
                             <label>Customer Address</label>
                             {{ form.customer_address }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                        </div>
+                        <div class="form__group">
+                            <label>Delivery Address</label>
+                            {{ form.delivery_address }}
+                        </div>
+                        <div class="row product-box"
+                             style="border: solid 2px #fc4b0b; border-radius: 10px; max-width: 96%;  margin-left: 0px;">
+                            <div class="row product-div" id="new_product"
+                                 style=" padding: 10px 10px 0px 0px; margin-left: -5px; margin-bottom: 5px; margin-right: -5px">
+                                <div class="col-lg-5" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Product ID</label>
+                                        {#                            {{ form.product }}#}
+                                        <div class="product_entry">
+                                            <input required type="search" list="product" placeholder="Select ID"
+                                                   name='product' class="product_inf"
+                                                   onfocus="this.value=''" onchange="this.blur();">
+                                            <datalist name="product" id="product">
+                                                {% for p in products %}
+                                                    {% if p.product_type == 'Clothing' %}
+                                                        <option value="{{ p.product_id }}">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Quantity</label>
+                                        {#                                        {{ form.quantity }}#}
+                                        <input type="number" name="quantity" id="id_quantity" value=1>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5" style="padding-left: 25px; padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Size</label>
+                                        {#                                        {{ form.size }}#}
+                                        <input type="text" name="size" maxlength="200" id="id_size" class="product_inf">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px">
+                            <button type="button" id="add_product" class="btn btn-primary"
+                                    style="background-color: #fc4b0b; border: none; margin-top: 5px; padding: 10px">Add
+                                Product
+                            </button>
+                            <button type="button" id="confirm_btn" class="btn btn-success"
+                                    style="border: none; margin-top: 5px; padding: 10px">Confirm
+                            </button>
+                        </div>
+                        <div class="form__group">
+                            <label>Custom Name</label>
+                            {{ form.custom_name }}
+                        </div>
+                        <div class="form__group">
+                            <label>Custom Number</label>
+                            {{ form.custom_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid Amount</label>
+                            {{ form.paid }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid To</label>
+                            {{ form.paid_to_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash No</label>
+                            {{ form.bkash_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash TXN ID</label>
+                            {{ form.bkash_txn_id }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Facebook</label>
+                            {{ form.customer_fb }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Discord</label>
+                            {{ form.customer_discord }}
+                        </div>
+                        <input type="hidden" id="products_list" name="products_list">
+
+
+                        <div class="form__action" style="margin-right: 2%">
+                            <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
+                            <button class="btn btn--main" id="submit" type="submit" disabled>Submit</button>
+                        </div>
+                    </form>
+
+                    <form id="others" class="form" action="" method="POST" autocomplete="off">
+                        {% csrf_token %}
+
+                        <div class="form__group">
+                            <label>Customer Name</label>
+                            {{ form.customer_name }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Mobile</label>
+                            {{ form.customer_contactnumber }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Email</label>
+                            {{ form.customer_email }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Address</label>
+                            {{ form.customer_address }}
+                        </div>
+                        <div class="form__group">
+                            <label>Delivery Address</label>
+                            {{ form.delivery_address }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Facebook</label>
+                            {{ form.customer_fb }}
+                        </div>
+                        <div class="form__group">
+                            <label>Customer Discord</label>
+                            {{ form.customer_discord }}
                         </div>
                         <div class="form__group">
                             <label>Product ID</label>
-                            {#                            {{ form.product }}#}
-                            <input list="product" placeholder="Select Product" name='product'>
-                                <datalist name="product" id="product">
-{#                                <option value="">Select Product</option>#}
-                                    {% for p in product_id %}
+                            <input type="search" list="product2" placeholder="Select Product" name='product'
+                                   onfocus="this.value=''"
+                                   onchange="this.blur();">
+                            <datalist name="product" id="product2">
+                                {% for p in products %}
+                                    {% if p.product_type != 'Clothing' %}
                                         <option value="{{ p.product_id }}">
-                                    {% endfor %}
-                                </datalist>
-
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                                    {% endif %}
+                                {% endfor %}
+                            </datalist>
                         </div>
                         <div class="form__group">
                             <label>Quantity</label>
                             {{ form.quantity }}
-                            <!--              <input id="room_name" name="room_name" type="text" placeholder="E.g. Mastering Python + Django" />-->
+                        </div>
+                        <div class="form__group">
+                            <label>Paid Amount</label>
+                            {{ form.paid }}
+                        </div>
+                        <div class="form__group">
+                            <label>Paid To</label>
+                            {{ form.paid_to_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash No</label>
+                            {{ form.bkash_number }}
+                        </div>
+                        <div class="form__group">
+                            <label>Bkash TXN ID</label>
+                            {{ form.bkash_txn_id }}
                         </div>
 
-                        <!--            <div class="form__group">-->
-                        <!--              <label for="room_topic">Topic</label>-->
-                        <!--              <input required type="text" name="topic" id="room_topic" list="topic-list" />-->
-                        <!--              <datalist id="topic-list">-->
-                        <!--                <select id="room_topic">-->
-                        <!--                  <option value="">Select your topic</option>-->
-                        <!--                  <option value="Python">Python</option>-->
-                        <!--                  <option value="Django">Django</option>-->
-                        <!--                </select>-->
-                        <!--              </datalist>-->
 
-                        <!--            </div>-->
-
-
-                        <div class="form__action">
+                        <div class="form__action" style="margin-right: 2%">
                             <a class="btn btn--dark" href="{% url 'home' %}">Cancel</a>
                             <button class="btn btn--main" type="submit">Submit</button>
                         </div>
@@ -116,5 +397,132 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+    <script>document.getElementById('open').click()</script>
+
+    <script>
+        document.getElementsByName('quantity')[document.getElementsByName('quantity').length - 2].setAttribute('class', 'product_inf')
+        document.getElementsByName('size')[document.getElementsByName('size').length - 1].setAttribute('class', 'product_inf')
+
+        $(document).ready(function () {
+            const max_fields = 5; //maximum input boxes allowed
+            let wrapper = $(".product-box"); //Fields wrapper
+            let add_button = $(".btn-primary"); //Add button ID
+            let confirm_btn = $(".btn-success"); //Confirm button ID
+
+            let x = 1; //initlal text box count
+            let products_array = []
+
+            $(add_button).click(function (e) { //on add input button click
+                {#let product_orders = document.getElementsByClassName('product_inf')#}
+                {#let dict = {}#}
+                {#for (let i = 0; i < product_orders.length; i++) {#}
+                {#    dict[product_orders[i].name] = product_orders[i].value#}
+                {#    product_orders[i].setAttribute("disabled", true)#}
+
+                {#products_array.push(dict)#}
+
+                e.preventDefault();
+                if (x < max_fields) { //max input box allowed
+                    x++; //text box increment
+                    $(wrapper).append(`<div class="row product-div" id="new_product"
+                                 style=" padding: 10px 10px 0px 0px; margin-left: -3px;  margin-right: -5px">
+                                <div class="col-lg-4" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Product ID</label>
+                                        <div>
+                                            <input required type="search" list="product" placeholder="Select ID"
+                                                   name='product' class="product_inf"
+                                                   onfocus="this.value=''" onchange="this.blur();">
+                                            <datalist name="product" id="product">
+                                                                                <option value="">Select Product</option>
+                                                {% for p in products %}
+                                                    {% if p.product_type == 'Clothing' %}
+                                                        <option value="{{ p.product_id }}">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 0px">
+
+                                    <div class="form__group">
+                                        <label>Quantity</label>
+{#                                        {{ form.quantity }}#}
+                                        <input type="number" name="quantity" id="id_quantity" value=1>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4" style="padding-left: 25px; padding-right: 0px">
+                                    <div class="form__group">
+                                        <label>Size</label>
+                                        {{ form.size }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-2" style="padding-right: 1px;">
+                                    <button type="button" id="` + x + `" class="btn btn-primary remove_product"
+                                            style="background-color: #565656; border: none; margin-top: 33px"><img src="https://img.icons8.com/external-kosonicon-solid-kosonicon/32/ffffff/external-bin-cleaning-kosonicon-solid-kosonicon.png"/>
+                                    </button>
+                                </div>
+                            </div>`); //add input box
+                }
+
+                document.getElementsByName('quantity')[document.getElementsByName('quantity').length - 2].setAttribute('class', 'product_inf')
+                document.getElementsByName('size')[document.getElementsByName('size').length - 1].setAttribute('class', 'product_inf')
+
+
+            });
+
+            let error_flag_empty = false
+
+            $(confirm_btn).click(function (e) { //on click disable fields and button
+                let product_orders = document.getElementsByClassName('product_inf')
+                let dict = {}
+                for (let i = 0; i < product_orders.length; i++) {
+                    if (product_orders[i].value !== '') {
+                        dict[product_orders[i].name] = product_orders[i].value
+                        product_orders[i].setAttribute("disabled", true)
+                        if (i !== 0 && (i + 1) % 3 === 0) {
+                            products_array.push(dict)
+                            console.log(dict)
+                            dict = {}
+                            {#dict[product_orders[i].name] = product_orders[i].value#}
+                        }
+                        error_flag_empty = false
+                    } else {
+                        alert((product_orders[i].name).toUpperCase() + ' Cannot Be Null!')
+                        error_flag_empty = true
+                    }
+                }
+                console.log(error_flag_empty)
+                if (!error_flag_empty) {
+                    $('.remove_product').each(function (i) {
+                        $(this).attr('disabled', true);
+                    });
+                    document.getElementById('add_product').setAttribute('disabled', true)
+                    document.getElementById('confirm_btn').setAttribute('disabled', true)
+                    document.getElementById('submit').disabled = false
+                }
+
+                e.preventDefault();
+            });
+
+
+            $(wrapper).on("click", ".remove_product", function (e) { //user click on remove product entry
+                e.preventDefault();
+                products_array.splice(parseInt(this.id) - 1, 1)
+                $(this).parent('div').parent('div').remove();
+                x--;
+            })
+
+            document.getElementById('submit').addEventListener('click', () => {
+                document.getElementById('products_list').value = JSON.stringify(products_array)
+            })
+
+        });
+
+
+    </script>
+
 {% endblock %}

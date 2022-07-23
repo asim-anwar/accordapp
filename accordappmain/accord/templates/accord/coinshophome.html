@@ -1,0 +1,277 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffcfa5;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #ed6a4c;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .page-label {
+            padding-bottom: 10rem;
+        }
+
+        .btn-img {
+            width: 30rem;
+            box-shadow: 0px 5px 15px 2px #888888;
+            border-radius: 20px;
+            padding: 50px;
+            background-color: #ed6a4c;
+            transition: all .2s ease-in-out;
+        }
+
+        .btn-img:hover {
+            transform: scale(1.1);
+        }
+
+        .graph, .expense, .fund, .recent {
+            box-shadow: 0px 5px 15px 2px #888888;
+            border-radius: 20px;
+            padding: 2rem 3rem;
+            margin: 2rem;
+            transition: all .2s ease-in-out;
+        }
+
+        .graph:hover, .expense:hover, .fund:hover, .recent:hover {
+            transform: scale(1.05);
+        }
+
+        .expense {
+            height: 200px;
+        }
+
+        th {
+        {#border-left: 1px solid black;#}{#border-right: 1px solid black;#}{#border-bottom: 1px solid black;#} border-radius: 5px;
+            padding: 0.5rem;
+            width: auto;
+            color: white;
+            position: sticky;
+            top: 0;
+            text-align: center;
+        {#background-color: #fc4b0b;#} background-color: #ED6A4C;
+        }
+
+        body, html {
+            height: 100%;
+            text-align: center;
+        }
+
+        body {
+            background-color: antiquewhite;
+        }
+
+
+        @media (min-width: 1200px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        {#---------< chart css >----------#}
+
+        #animations-example-3 {
+            height: 450px;
+            max-width: 500px;
+        {#margin: 0 auto;#}
+        }
+
+        #animations-example-3 tbody {
+            overflow-y: hidden; /* remove this to see how it works */
+        }
+
+        #animations-example-3 tbody th {
+            background-color: #ed6a4c;
+            z-index: 1;
+        }
+
+        #animations-example-3 tbody td {
+            animation: moving-bars 4s linear;
+            background-color: #ff6e40;
+        }
+
+        #animations-example-3 td {
+            background-image: linear-gradient(
+                    45deg,
+                    #fc4b0b,
+                    #f7612e,
+                    #fc7d53,
+                    #ff9775,
+                    #fcc3b0,
+                    #fcd6c9
+            );
+            background-size: 600%;
+            animation: gradient-animation 3s linear infinite alternate;
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0%;
+            }
+            100% {
+                background-position: 100%;
+            }
+        }
+
+
+        @keyframes moving-bars {
+            0% {
+                transform: translateY(100%);
+            }
+            15% {
+                transform: translateY(0);
+            }
+        }
+
+        .data {
+            color: #e1f6fb;
+        }
+
+
+    </style>
+
+
+
+    <div class="container" style="max-height: 600px">
+        <div class="row">
+            <div class="col-lg-2 pages">
+                {% include 'accord/topics_component.html' %}
+            </div>
+            <div class="col-lg-7">
+                <div class="row">
+                    <div class="col-lg-auto graph">
+                        {#                        <img src="https://picsum.photos/3840/2160/?random"/>#}
+                        <table id="animations-example-3"
+                               class="charts-css column show-labels data-spacing-5 show-primary-axis">
+                            <caption> Animation Example #3</caption>
+                            <thead>
+                            <tr>
+                                <th scope="col"> Year</th>
+                                <th scope="col"> Progress</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row"> 2016</th>
+                                <td style="--size:.3;"><span class="data"> 30 </span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> 2017</th>
+                                <td style="--size:0.8;"><span class="data"> 80 </span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> 2018</th>
+                                <td style="--size:0.7;"><span class="data"> 70 </span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> 2019</th>
+                                <td style="--size:0.8;"><span class="data"> 80 </span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> 2020</th>
+                                <td style="--size:0.6;"><span class="data"> 60 </span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> 2021</th>
+                                <td style="--size:.95;"><span class="data"> 95 </span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> 2022</th>
+                                <td style="--size:0.2;"><span class="data"> 20 </span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-auto expense">
+                        <div class="expense-div" style="max-height:170px; overflow: auto">
+                            <table class="table table-hover table-bordered">
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Contact</th>
+                                    <th>Country</th>
+                                </tr>
+                                <tr>
+                                    <td>Alfreds Futterkiste</td>
+                                    <td>Maria Anders</td>
+                                    <td>Germany</td>
+                                </tr>
+                                <tr>
+                                    <td>Centro comercial Moctezuma</td>
+                                    <td>Francisco Chang</td>
+                                    <td>Mexico</td>
+                                </tr>
+                                <tr>
+                                    <td>Ernst Handel</td>
+                                    <td>Roland Mendel</td>
+                                    <td>Austria</td>
+                                </tr>
+                                <tr>
+                                    <td>Island Trading</td>
+                                    <td>Helen Bennett</td>
+                                    <td>UK</td>
+                                </tr>
+                                <tr>
+                                    <td>Laughing Bacchus Winecellars</td>
+                                    <td>Yoshi Tannamuri</td>
+                                    <td>Canada</td>
+                                </tr>
+                                <tr>
+                                    <td>Magazzini Alimentari Riuniti</td>
+                                    <td>Giovanni Rovelli</td>
+                                    <td>Italy</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="row fund">
+                    Funds
+                </div>
+                <div class="row recent">
+                    Recent Sells
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+
+
+{% endblock content %}
+

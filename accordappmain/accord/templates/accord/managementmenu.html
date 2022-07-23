@@ -1,0 +1,91 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #ffcfa5;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #ed6a4c;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .page-label {
+            padding-bottom: 10rem;
+        }
+
+        .btn-img {
+            width: 30rem;
+            box-shadow: 0px 5px 15px 2px #888888;
+            border-radius: 20px;
+            padding: 50px;
+            background-color: #ed6a4c;
+            transition: all .2s ease-in-out;
+        }
+
+        .btn-img:hover {
+            transform: scale(1.1);
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 100%;
+            }
+        }
+
+
+    </style>
+
+
+    <div class="container">
+        <div>
+            <div class="col-lg-auto page-label" align="center">
+                <h1 style="color: #ed6a4c; font-size: 50px; font-weight: 800">Seikai Management</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 seikai" align="right">
+                <a href="{% url 'home' %}">
+                    <img src='static/images/nav_LOGO.png' class="btn-img">
+                </a>
+            </div>
+            <div class="col-lg-6 coin">
+                <img src='static/images/nav_LOGO.png' class="btn-img">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"></script>
+
+
+{% endblock content %}
+
