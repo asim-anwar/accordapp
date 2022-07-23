@@ -285,7 +285,7 @@ def create_order(request):
     form = OrderForm()
     error = ''
     mail = ''
-    products = Product.objects.filter(available='Yes')
+    products = Product.objects.filter(available='Yes', product_type="Clothing")
     # topics = Topic.objects.all()
 
     try:
@@ -315,8 +315,12 @@ def create_order(request):
                     if form2.is_valid():
                         product_entry = form2.save(commit=False)
                         product_entry.product_id = Product.objects.get(product_id=selected_product['product']).id
-                        total += Product.objects.get(product_id=selected_product['product']).price * int(
-                            selected_product['quantity'])
+                        if selected_product['sleeve'] == 'full':
+                            total += Product.objects.get(product_id=selected_product['product']).full_sleeve_price * int(
+                                selected_product['quantity'])
+                        elif selected_product['sleeve'] == 'half':
+                            total += Product.objects.get(product_id=selected_product['product']).half_sleeve_price * int(
+                                selected_product['quantity'])
                         order.total_price = total
                         order.save()
                         product_entry.order_id = order.id
