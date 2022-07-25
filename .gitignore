@@ -2,3 +2,5 @@ accordappmain/accordapp/
 accordappmain/static/
 accordappmain/staticfiles/
 accordappmain/accord/migrations/
+accordappmain/__pycache__/
+accordappmain/accord/__pycache__/
